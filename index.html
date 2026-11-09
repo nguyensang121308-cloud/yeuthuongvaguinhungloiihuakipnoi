@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b9d9f7">
+<meta name="color-scheme" content="light">
+<title>Bưu thiếp và tháp thư</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Dancing+Script:wght@600;700&family=Lora:wght@500;700&family=Pacifico&family=Great+Vibes&family=Allura&display=swap" rel="stylesheet">
+
+<!-- Phông chữ ký có đủ dấu tiếng Việt (tải riêng để lỗi mạng không ảnh hưởng phông khác) -->
+<link href="https://fonts.googleapis.com/css2?family=Playwrite+VN:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+<div class="san" id="san">
+
+  <!-- Hoa và tim rơi (được tạo bằng JS) -->
+  <div class="hat-lop" id="hatLop" aria-hidden="true"></div>
+  <!-- Hashtag trang trí bay lơ lửng quanh bưu thiếp (sửa ở mục hashtag_troi trong khu NỘI DUNG phía dưới) -->
+  <div class="tag-troi" id="tagTroi" aria-hidden="true"></div>
+
+  <!-- Tiêu đề + mũi tên chỉ xuống bưu thiếp -->
+  <div class="chu-duoi">
+    <h1 id="bcH1">Những điều tôi đã viết</h1>
+    <span class="nut-mo"><span id="bcNut">Chạm vào bưu thiếp để mở thư</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </span>
+  </div>
+
+  <!-- ===== BƯU THIẾP 4x6 INCH: bấm vào để nổ ra tháp thư ===== -->
+  <div class="nho">
+    <div class="nghieng" id="nghieng">
+      <div class="the bia-the" id="the" role="button" tabindex="0" aria-label="Bấm vào bưu thiếp để mở các bức thư">
+        <!-- >>> ĐỔI ẢNH Ở ĐÂY: thay images/bia.jpg bằng ảnh của bạn <<< -->
+        <div class="anh" id="anhBia" style="background-image:url('../khongnoithitnoi/hinhanh/Screenshot 2026-10-25 195408.png'),linear-gradient(135deg,#2a78d4,#7cc0f5)">
+          <div class="hashtag" id="hashtag"></div>
+          <div class="dau-bc" id="bcDau"></div>
+          <div class="loi"><span id="bcTieude">Gửi từ trang viết của tôi</span><small id="bcPhu">Chuyện đi, chuyện ăn, chuyện nghề</small></div>
+        </div>
+        <div class="tem"><span id="bcTem">THƯ<br>5000</span></div>
+      </div>
+    </div>
+    <!-- Hoa trang trí quanh bưu thiếp bìa (tulip, hoa hồng, hoa sứ): nở ra khi bấm vào bưu thiếp -->
+    <div class="hoa-bia" id="hoaBia" aria-hidden="true"></div>
+  </div>
+
+  <!-- Dòng chữ ký viết tay NẰM NGOÀI bưu thiếp, ngay bên dưới (sửa ở mục bia_ky) -->
+  <div class="ky-ngoai" id="bcKy"></div>
+
+  <!-- ===== BANNER CHỦ ĐỀ: mỗi chủ đề là một bưu thiếp ===== -->
+  <section class="banner" id="banner" aria-label="Chọn chủ đề">
+    <div class="banner-dai"><h2 id="bnTde">Gửi đến bạn</h2><p id="bnPhu">Chọn một chủ đề để mở những bức thư</p></div>
+    <div class="banner-luoi"><div class="luoi-trong" id="luoiTrong"></div></div>
+    <button class="quay" id="veBia" type="button">← Về bìa</button>
+  </section>
+
+  <!-- Bưu thiếp của chủ đề đang chọn -->
+  <div class="nho-loai" id="nhoLoai">
+    <div class="the" id="theLoai" role="button" tabindex="0" aria-label="Quay lại chọn chủ đề khác">
+      <div class="anh" id="anhLoai"><div class="loi"><span id="loaiTen"></span><small id="loaiPhu"></small></div></div>
+      <div class="tem"><span id="loaiTem"></span></div>
+    </div>
+  </div>
+
+  <!-- ===== THÁP THƯ CỦA CHỦ ĐỀ ===== -->
+  <section class="thap-khung" aria-label="Tháp thư">
+    <div class="thap-dau">
+      <button class="quay" id="veBanner" type="button">← Chọn chủ đề khác</button>
+      <h2 id="tdThap"></h2>
+      <p id="soThu"></p>
+    </div>
+    <div class="thap" id="thap"></div>
+  </section>
+</div>
+
+<!-- ===== HỘP ĐỌC THƯ ===== -->
+<div class="doc-hop" id="docHop" aria-hidden="true">
+  <article class="doc-giay" id="docGiay">
+    <button class="doc-dong" id="docDong" aria-label="Đóng thư">✕</button>
+    <h3 id="docTieude"></h3>
+    <div class="sub" id="docSub"></div>
+    <div id="docAnh"></div>
+    <div id="docNoidung"></div>
+  </article>
+</div>
+
+
+<!-- =====================================================================
+     KHO NỘI DUNG — CHỈ CẦN SỬA Ở ĐÂY, KHÔNG PHẢI ĐỘNG VÀO FILE js/main.js
+     Mọi chữ bên dưới là chữ thường: dán (copy/paste) văn bản vào thoải mái,
+     gõ dấu nháy " ' , dấu ngoặc, tiếng Việt, emoji... đều không bị lỗi.
+     Chỉ cần KHÔNG viết chữ  </script  ở trong nội dung.
+     ===================================================================== -->
+
+<!-- ---------- 1. CÀI ĐẶT CHUNG ----------
+     Mỗi dòng có dạng   tên: giá trị   (không cần dấu nháy).
+     Muốn xuống dòng trong một giá trị thì gõ dấu |
+     Dòng bắt đầu bằng // là ghi chú, trang sẽ bỏ qua. Xóa một dòng thì trang dùng giá trị mặc định. -->
+<script type="text/plain" id="cauhinh">
+// ----- Bưu thiếp bìa -----
+// Dòng chữ KÝ chạy từ trái qua phải trên bưu thiếp bìa (viết tay, tự ký lại sau mỗi vài giây)
+bia_ky: Đến Từ Ban Truyền Thông
+// Phần chữ trong dòng ký trên được tô NHIỀU MÀU (mỗi chữ cái một màu). Gõ lại đúng phần chữ muốn tô màu.
+// Để trống = không tô nhiều màu, cả dòng một màu xanh.
+bia_ky_noibat: Truyền Thông
+bia_tieude:
+// Hoa nở quanh bưu thiếp bìa khi bấm vào. Để trống = bộ mặc định (hoa hồng, tulip, hoa sứ).
+// Gõ  khong  để tắt hoa. Hoặc chọn loại, ví dụ:  hoa_bia: tulip   hoặc   hoa_bia: hong su
+// (loại hoa: hong = hoa hồng, tulip = hoa tulip, su = hoa sứ)
+hoa_bia:
+// Để TRỐNG (không gõ gì sau dấu :) là ẩn dòng đó đi cho ảnh bìa thoáng
+bia_phu:
+bia_tem:
+bia_dau:
+bia_h1: Những điều tôi đã viết
+bia_nut: Chạm vào bưu thiếp để mở thư
+// Hashtag cách nhau bằng dấu cách. Trên ảnh hiện tối đa 5 cái, lơ lửng quanh bưu thiếp tối đa 6 cái
+hashtag:
+hashtag_troi: #gửiđếnbạn #thưtay #mãiyêu #YouthBond #kynangthanhcong
+
+// ----- Banner chọn chủ đề -----
+banner_tde: Gửi đến bạn
+banner_phu: Chọn một chủ đề để mở những bức thư
+banner_ve: ← Về bìa
+loai_dem: {n} bức thư
+thap_tde: Chọn một bức thư
+thap_dem: {n} bức thư
+thap_ve: ← Chọn chủ đề khác
+
+// ----- Chữ ký cuối mỗi thư -----
+// kiểu chữ chọn một trong năm: Playwrite VN | Dancing Script | Pacifico | Great Vibes | Allura   (cỡ chữ: 1.45 là vừa, 2 là to)
+chuky_macdinh: Hẹn thư sau ♥
+chuky_kieuchu: Playwrite VN
+chuky_cochu: 1.45
+
+// ----- Thư không có ảnh -----
+// bat = hiện khối trang trí theo chủ đề thay cho ảnh   tat = không hiện gì (thư chỉ có chữ)
+trangtri_khong_anh: bat
+
+// ----- Hiệu ứng bất ngờ khi mở thư -----
+// tile: 0 là không bao giờ, 0.7 là khoảng 7 trên 10 lần mở, 1 là lần nào cũng có
+hieuung_tile: 0.7
+// bớt tên nào thì hiệu ứng đó không xuất hiện: phao-hoa lap-lanh bong-bay tim-hong phao-hoa-dem
+hieuung_loai: phao-hoa lap-lanh bong-bay tim-hong phao-hoa-dem
+</script>
+
+<!-- ---------- 2. CÁC CHỦ ĐỀ (mỗi khối = một bưu thiếp trên banner) ----------
+     id   : tên ngắn không dấu, dùng để gắn thư vào chủ đề (dòng "loai:" của thư phải ghi đúng id này)
+     ten  : tên chủ đề      mota : dòng mô tả nhỏ      anh : ảnh bưu thiếp chủ đề (tỉ lệ 6x4)
+     Muốn thêm chủ đề: copy cả khối <script ...> ... </script> rồi sửa. Muốn xóa: xóa cả khối. -->
+
+<script type="text/plain" class="chude">
+id: cam-on
+ten: Lời cảm ơn
+mota: Gửi những người đã ở bên mình
+anh: ../khongnoithitnoi/hinhanh/anh1 (1).png
+// trangtri: kiểu trang trí cho thư không ảnh. Chủ đề có sẵn tự nhận theo id; chủ đề tự thêm thì ghi một trong:
+// cam-on | xin-loi | dong-vien | ban-be | yeu-thuong | chuc | chinh-minh
+</script>
+
+<script type="text/plain" class="chude">
+id: xin-loi
+ten: Lời xin lỗi
+mota: Những điều chưa kịp nói
+anh: ../khongnoithitnoi/hinhanh/image.png
+</script>
+
+<script type="text/plain" class="chude">
+id: dong-vien
+ten: Lời động viên
+mota: Cho những ngày mệt mỏi
+anh: ../khongnoithitnoi/hinhanh/image (1).png
+</script>
+
+<script type="text/plain" class="chude">
+id: ban-be
+ten: Lời gửi tới bạn bè
+mota: Gửi những người bạn thân
+anh:../khongnoithitnoi/hinhanh/anh1 (2).png
+</script>
+
+
+
+
+<script type="text/plain" class="chude">
+id: chinh-minh
+ten: Lời gửi chính mình
+mota: Những điều mình tự nói với mình
+anh: ../khongnoithitnoi/hinhanh/anh1 (3).png
+</script>
+
+<!-- ---------- 3. CÁC BỨC THƯ (mỗi khối = một bức thư) ----------
+     Phần trên dòng --- là thông tin (tuỳ chọn, bỏ dòng nào cũng được):
+        loai     : id chủ đề của thư        tieude : tên thư        ngay : ngày viết
+        anh      : ảnh kèm thư (6x4)        chuthich : dòng viết tay dưới ảnh
+                   >>> THÊM ẢNH : thêm một dòng   anh: images/ten-anh.jpg
+                   >>> XÓA ẢNH  : xóa dòng anh: (và dòng chuthich:) đi, hoặc gõ   anh: khong
+                   Thư không có ảnh sẽ tự có khối trang trí theo chủ đề (huy hiệu + hoa văn nhỏ), không bị trống.
+                   Ảnh sai tên / chưa có file cũng tự chuyển sang trang trí, không hiện ô xanh trống.
+        ky       : chữ ký riêng (bỏ trống = dùng chuky_macdinh)
+        hieuung  : phao-hoa | lap-lanh | bong-bay | tim-hong | phao-hoa-dem | khong  (bỏ trống = ngẫu nhiên)
+        hoa      : hoa trang trí khi mở thư:  hong | tulip | su | khong  (bỏ trống = tự đổi loại hoa theo từng thư)
+     Phần dưới dòng --- là NỘI DUNG THƯ: dán thẳng văn bản vào, dài bao nhiêu cũng được.
+     Một dòng trống = sang đoạn mới.
+     Muốn thêm thư: copy cả khối <script ...> ... </script>, dán xuống dưới, sửa lại. -->
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi cả nhà
+ngay: 11/11/2026
+ky: Một Người Trong Youth Bond
+---
+Em muốn gửi lời cảm ơn đến cả nhà mình vì đã cùng nhau đồng hành, cùng nhau trải qua hành trình của cả 3 đợt vừa qua. ❤️
+
+Thật ra, ở đợt đầu tiên, em vẫn còn khá thờ ơ, trầm tính và chưa thật sự cởi mở với mọi người. Nhưng càng có cơ hội trò chuyện, vui chơi và tham gia các hoạt động cùng cả nhà, em càng cảm thấy vui và trân trọng những khoảnh khắc ấy. Đối với em, đôi khi niềm vui chẳng cần phải đến từ điều gì quá lớn lao, chỉ cần được ở cạnh mọi người, cùng cười nói, cùng chia sẻ những câu chuyện nhỏ nhặt thôi cũng đủ khiến em cảm thấy hạnh phúc rồi.
+
+Đặc biệt, có một điều rất nhỏ nhưng lại khiến em xúc động vô cùng, đó là lần đầu tiên em được ngồi ăn chung một mâm với đông đủ mọi người như vậy. Bình thường, em vẫn hay lủi thủi ăn một mình, cứ nghĩ ăn uống đơn giản chỉ là để no bụng rồi tiếp tục công việc của mình thôi. Nhưng khi được ngồi bên mọi người, được nghe những câu chuyện, được trò chuyện và tiếp xúc với những sở trường, những nét tính cách riêng của từng người, em mới nhận ra rằng một bữa ăn đôi khi không chỉ đơn giản là một bữa ăn. Đó còn là cơ hội để mọi người gần nhau hơn, để những người vốn chưa thân có thể hiểu nhau thêm một chút.
+
+Em thật sự cảm thấy rất tuyệt vời khi được là một phần trong hành trình này. Có thể em chưa phải là người giỏi giao tiếp nhất, chưa phải người nổi bật nhất hay có thể làm được những điều gì quá lớn lao cho tập thể, nhưng em luôn mong rằng những gì mình có thể đóng góp sẽ mang lại một chút niềm vui và giá trị cho cả nhà.
+
+Cảm ơn mọi người vì đã cho em cơ hội được gặp gỡ, được trải nghiệm, được vui chơi và được lưu giữ những kỷ niệm đẹp như vậy. Cảm ơn vì đã khiến một người đôi khi chỉ quen với việc tự mình làm mọi thứ như em cũng có những khoảnh khắc được hòa vào tập thể, được lắng nghe và được chia sẻ.
+
+Em không biết sau này chúng ta còn có bao nhiêu cơ hội để gặp lại nhau, cùng tham gia những hoạt động như thế này, nhưng em thật lòng mong rằng nếu còn cơ hội, em sẽ tiếp tục được đồng hành cùng mọi người. Và lần tới, em nhất định sẽ cố gắng cởi mở hơn, chơi hết mình hơn, sống trọn vẹn với từng khoảnh khắc và không ngại thể hiện những cảm xúc thật của bản thân nữa.
+
+Ba đợt có thể rồi cũng sẽ khép lại, nhưng những kỷ niệm mà chúng ta cùng tạo nên sẽ luôn là điều em trân trọng. Em mong rằng sau hành trình này, chúng ta không chỉ là những người từng gặp nhau trong một chương trình, mà còn có thể trở thành những người vẫn nhớ đến nhau, vẫn hỏi thăm nhau và vẫn vui vẻ khi có dịp gặp lại.
+
+Cảm ơn cả nhà mình rất nhiều vì đã cùng nhau tạo nên một hành trình thật đẹp. Em vui vì đã gặp được mọi người, vui vì đã có những trải nghiệm mới và vui vì lần này, em không chỉ có những kỷ niệm của riêng mình mà còn có những kỷ niệm được tạo nên cùng cả nhà.
+
+Thương chúc cả nhà luôn vui vẻ, bình an, giữ được nhiệt huyết của mình và dù sau này mỗi người có đi trên một con đường khác nhau, mong rằng chúng ta vẫn sẽ nhớ về nhau bằng những điều tốt đẹp nhất.
+
+Yêu cả nhà mình nhiều lắm!
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi Thu Diễm 
+ngay: 11/11/2026
+chuthich: Cảm ơn bạn
+ky: Một người trong Youth Bond
+---
+Không biết phải nói như nào nhỉ... Rất cảm ơn bạn vì thời gian qua đã luôn support, chia sẻ và giúp đỡ mình. Có những lúc mình mất phương hướng, thậm chí không biết phải làm sao nữa, áp lực lại dồn nén và bạn là người đã động viên, hỗ trợ và chia sẻ những điều đó với mình, mình rất biết ơn và trân trọng điều đó! Cảm ơn vì đã cho mình thấy mình không cô đơn trên hành trình này, tất cả mọi người luôn bên nhau. Mong rằng bạn sẽ luôn giữ nguồn năng lượng tích cực đó và lan tỏa đến mọi người nhé! Cảm ơn bạn rất nhiều.
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi chị Mai và thầy Dũng
+ngay: 11/11/2026
+---
+Nhìn tấm ảnh này em cảm thấy Quyền lực của sóng gió gia tộc đã trở lại r ak mn 🤭.
+
+Nên viết j đây ta, quá nhiều điều muốn nói nên để dành chút ít kèm lời nhắn nhỏ ạ: Cảm ơn chị Mai đồng hành cùng team Youth Bond 😘 từ nay em có thể san sẻ với chị rùi 🍀, em cảm ơn thầy Dũng đỡ cho em trận bão vừa rồi ạ 🤭. 
+
+Yêu cả nhà mik quá 🥰🥰.
+
+
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: xin-loi
+tieude: Tôi 🏠
+ngay: 11/11/2026
+chuthich: Điều mình chưa kịp nói
+---
+Chào cậu, một người không hẳn là hướng nội nhưng lại ít nói ở một môi trường mới. Mình nhớ lần đầu tiên mình bước lên chiếc xe tập huấn ấy, nếu không có người dẫn dắt thì liệu mình có được nói được chia sẻ nhiều như hôm nay không. Những ngày đầu ở buổi tập huấn, mình đã cố gắng nói thật nhiều, cười thật nhiều đã tạo không khí vui vẻ. Khi một năng lượng tích cực toát ra thì sẽ thu hút các năng lực tích cực khác. Mình được học rất nhiều thứ, mình học được cách vận dụng vào thực tế. Cách học, cách quản lý, cách kết nối, cách nch như thế nào. Ở đó mình gặp được những người bạn, mỗi ng mỗi tính cách nhưng đâu đó chúng ta lại có một số điểm chung. Mình yêu những con người ở đó. Xin lỗi bản thân vì đã không giữ sức khỏe tốt, đã bỏ lỡ những hoạt động hay mà mình muốn làm. Nhưng lúc ấy mình cảm nhận được sự quan tâm yêu thương của mọi người dành cho mình như thế nào. Mình nhận ra rằng bản thân phải biết yêu thương và quan tâm người bên cạnh mình nhiều hơn nữa.
+
+Cảm ơn rất nhiều ❤️
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: xin-loi
+tieude: Gửi: Người đặc biệt đã dẫn lối cho em, và gửi cả gia đình Youth Bond
+ngay: 11/11/2026
+ky: Một người đến từ Youth Bond
+---
+Người đặc biệt đã dẫn lối cho em, và gửi cả gia đình Youth Bond
+Em mượn chiếc hộp thư ẩn danh này để nói ra những điều bấy lâu nay cứ giữ mãi trong lòng. Lời đầu tiên, em muốn gửi lời cảm ơn và cả một lời xin lỗi chân thành nhất đến Cô — người đã mở cánh cửa đưa em đến với một tập thể tuyệt vời như Youth Bond.
+
+
+
+Nhóm mình đã qua 3 mùa hoạt động, vậy mà em chỉ mới góp mặt được ở chuyến đi thứ 2 (lần 1 chưa kịp tham gia, lần 3 thì em vướng bận việc học). Nhưng điều khiến em day dứt nhất không chỉ là việc vắng mặt, mà là bởi bản thân em vốn rất nhút nhát và hướng nội. Bước vào một môi trường tràn ngập sự nhiệt huyết, văn minh, lịch sự và gắn kết như YoBond, nhiều lúc em cảm thấy mình quá nhỏ bé, còn nhiều vụng về và chưa đủ tốt để trở thành một mảnh ghép trọn vẹn trong đại gia đình. Em sợ sự rụt rè của mình đã không đạt được sự kỳ vọng mà Cô dành cho em khi trao cho em cơ hội này.
+
+
+
+Dù chỉ một lần đồng hành, nhưng từng khoảnh khắc và tình cảm ấm áp của mọi người ở chuyến đi thứ 2 đã được em trân quý cất giữ sâu trong tim. Em sẽ cố gắng từng chút một để mở lòng hơn. Chúc Cô luôn mạnh khỏe, và chúc ngôi nhà Youth Bond ngày càng phát triển, vươn xa và rực rỡ hơn nữa! 
+</script>
+
+<!-- ---------- Thư thêm mới: cảm ơn 18, xin lỗi 2, động viên 9, bạn bè 11, gửi chính mình 3 ---------- -->
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌 Gửi Ban Chủ nhiệm Youth Bond,
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image.png
+chuthich: Cảm ơn vì đã là một phần của Youth Bond
+ky: Một người trong Youth Bond 
+---
+Có lẽ trong suốt thời gian qua, mình chưa có dịp nói thật đầy đủ lời cảm ơn đến mọi người.
+
+Mình xin cảm ơn tất cả mọi người vì đã cùng mình bắt đầu từ những ý tưởng còn rất nhỏ, cùng nhau bàn bạc, góp ý, chia sẻ và từng bước xây dựng nên Youth Bond của ngày hôm nay. Có những lúc mình còn nhiều băn khoăn, áp lực hay chưa biết phải bắt đầu từ đâu, nhưng sự đồng hành của mọi người đã giúp mình có thêm động lực để tiếp tục.
+
+Youth Bond có thể vẫn còn nhiều điều cần hoàn thiện, nhưng mình tin rằng điều quý giá nhất mà nhóm đang có chính là những con người sẵn sàng đồng hành cùng nhau.
+
+Cảm ơn Ban Chủ nhiệm vì đã tin tưởng, chia sẻ và cùng mình tạo nên một Youth Bond thật sự thuộc về tất cả chúng ta. 💙
+
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌Gửi :MỌI NGƯỜI ĐÃ CÓ MẶT TRONG THANH XUÂN CỦA EM ✨💗
+ngay: 11/11/2026
+ky: Một người trong Youth Bond 
+---
+Gửi đến những người đã đồng hành cùng em trong 3đợt tập huấn vừa qua 
+
+
+
+Em muốn gửi lời cảm ơn chân thành đến tất cả mọi người vì đã tạo nên một hành trình thật ý nghĩa đối với em. Sau mỗi đợt tập huấn, em không chỉ học thêm được nhiều kiến thức, kỹ năng mới mà còn nhận ra những thiếu sót của bản thân để cố gắng thay đổi và hoàn thiện hơn từng ngày.
+
+
+
+Từ một người còn nhiều bỡ ngỡ, đôi khi thiếu tự tin, em đã dần biết cách lắng nghe, chia sẻ, làm việc nhóm, giao tiếp và mạnh dạn thể hiện suy nghĩ của mình hơn. Em cũng học được cách nhìn nhận vấn đề từ nhiều góc độ, biết chọn lọc thông tin và có trách nhiệm hơn với những điều mình làm
+
+
+
+Điều em trân trọng nhất không chỉ là những kiến thức đã học được mà còn là những trải nghiệm, những người đã gặp và những kỷ niệm mà em sẽ luôn nhớ. Có lẽ em vẫn còn nhiều điều phải học, nhưng em tin rằng mình đã tiến bộ hơn so với ngày đầu tiên.
+
+
+
+Cảm ơn vì đã cho em cơ hội được trải nghiệm, được thử sức và được trưởng thành. Mong rằng những điều em học được trong 3đợt tập huấn sẽ trở thành hành trang để em tiếp tục cố gắng, lan tỏa những giá trị tích cực và trở thành phiên bản tốt hơn của chính mình.
+
+
+
+Cảm ơn vì đã là một phần trong hành trình trưởng thành của em. Dù sau này mỗi người có đi trên một con đường khác nhau, em vẫn sẽ luôn trân trọng những ngày tháng này.
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌 Gửi các em: Hương, Ngọc, Bảo, Thanh, Sang, Trường
+ngay: 11/11/2026
+ky: Một người trong Youth Bond 
+
+---
+Cảm ơn các em đã giúp chị hoàn thành mục tiêu lớn nhất của chị trong đợt tập huấn này, đó là có thêm bạn bè mới.
+
+
+
+Chị không giỏi thể hiện tình cảm nên không biết như nào là đủ, nhưng chị rất vui vì đã có cơ hội làm việc nhóm cùng các em, cùng nhau trò chuyện và biết ít nhiều về tính cách của mỗi bạn.
+
+
+
+Chị chúc Hương luôn là cô gái tươi vui, năng lượng. Nhớ đi khám xương khớp chứ không được ngồi than hoài nhen
+
+Chị chúc Ngọc luôn xinh đẹp và thành công trên hành trình học ngôn ngữ. Mong có dịp đợt sau, chị em mình vẫn ở cùng phòng và nhớ đem theo nước giặt đồ =))
+
+Chị chúc Bảo sẽ trở thành một nghệ sĩ đa tài như những gì em đang theo đuổi
+
+Chị chúc Thanh học tập tốt, mong có thể dành nhiều thời gian để trò chuyện với em hơn nữa
+
+Chị chúc bạn Sang luôn luôn nhiều năng lượng như những gì chị đã nhìn thấy ở em
+
+Và cuối cùng là chị chúc Trường có nhiều sức khoẻ, thành công trong ngành học mà em đang học tập, chúc em vẫn luôn yêu thương gia đình và giúp đỡ mọi người như cái cách mà em đã kể chị biết. Lần sau gặp lại thì phải +5KG nha 🙄
+
+
+
+Chúc các em sẽ luôn thành công trên hành trình phía trước, 
+
+pround of u.
+
+Hẹn gặp lại tất cả ❤️
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌Gửi :Chị VÂN ANH 
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Em cảm ơn chị vì 3 ngày tập huấn vừa qua nhaaa 🫶💗
+
+Thật ra những ngày đầu mới gặp chị, em thấy khuôn mặt chị có vẻ hơi khó tính nên em hơi sợ, không biết phải bắt chuyện với chị như thế nào. Nhưng không hiểu sao lúc đó em lại  rất muốn lập nhóm để đc làm việc với chị và mong muốn đó đã đc thực hiện, sau 3 ngày có cơ hội tiếp xúc, trò chuyện và làm việc cùng chị, em mới nhận ra chị rất hòa đồng, vui vẻ và quan tâm đến mọi người, khác hẳn với ấn tượng ban đầu của em luôn á =)))
+
+Tuy chỉ mới gặp nhau có 3 ngày thôi nhưng em đã cảm thấy khá thoải mái khi nói chuyện với chị cũng học được thêm nhiều điều từ đợt tập huấn này, không chỉ về kiến thức, kỹ năng mà còn về cách giao tiếp, làm việc cùng mọi người và tự tin hơn với bản thân mình. Em nghĩ đây sẽ là một trong những trải nghiệm đáng nhớ, giúp em trưởng thành và tiến bộ hơn một chút trên hành trình của mình.
+
+Tuy thời gian không dài nhưng cũng có nhiều khoảnh khắc vui mà sau này chắc em vẫn sẽ nhớ mãi. Chỉ tiếc là 3 ngày trôi qua nhanh quá, em còn chưa có nhiều thời gian để trò chuyện với chị nữa. Có nhiều lúc muốn nói chuyện thêm mà thời gian cứ trôi vèo vèo, chưa kịp thân hơn thì đã hết 3 ngày mất tiêuuu rồiii 🥹.
+
+Em mong là sau đợt này và cả những đợt sau nữa, chị em mình sẽ có thêm nhiều cơ hội làm việc cùng nhau, tiếp xúc và nói chuyện với nhau nhiều hơn. Hy vọng lần sau gặp lại, tụi mình sẽ không còn ngại ngùng gì nữa mà có thể thoải mái nói chuyện với nhau nhiều hơn nha chịii.
+
+Cảm ơn chị vì đã góp thêm một kỷ niệm đẹp trong hành trình trưởng thành của em. Chúc chị luôn vui vẻ, giữ mãi năng lượng tích cực và gặp thật nhiều điều tốt đẹp. Mong là tụi mình sẽ còn gặp nhau thật nhiều lần nữa chứ không chỉ dừng lại ở 3 ngày ngắn ngủi này đâu nhaaa. Hẹn gặp lại chị trong những dịp sắp tới.💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi đến anh chị trong YOUTH BOND và một số người bạn mới 
+ngay: 11/11/2026
+anh:../khongnoithitnoi/hinhanh/image (5).png
+chuthich: Một trong số hình ảnh Youth Bond
+
+ky: Một người trong Youth Bond
+---
+Xin chào sau khi trở về những kí ức trong em vẫn giống như ngày hôm qua mọi người vẫn còn ở đây vậy á, có những lời em vẫn chưa kịp nói một cách trọn vẹn mà em chỉ có thể ghi là " em cảm ơn anh/ chị" nếu mà để bày tỏ được hết cái niềm vui mà Youth bond đã mang đến thì e xin được cảm ơn đại gia đình trong ban Youth bond trước, có lẽ em vẫn còn quá trẻ nên em đôi lúc hơi tham chơi nhưng anh chị vẫn ở đó và tạo cơ hội cho em tỏa sáng và nói nhiều hơn em xin phép cảm ơn mọi người ạ, cảm ơn anh Thuận, cảm ơn anh Văn, cảm ơn anh Trọng Nhân, cảm ơn chị Linh, cảm ơn chị Diễm dịu dàng nhớ chỉ em uốn lượn nha trùi, cảm ơn chị Kiều em mong sắp tới sẽ hữu duyên gặp chị, cảm ơn Nghi đã support cho tui nha lớp diuu.
+
+Giờ tới lượt nhóm "SỐNG GIỜ MỸ "
+
+Nói tới đây thì chắc mọi người trong nhóm biết nhau rồi nha mong sắp tới nhóm mình sẽ đầy đủ và check-in một bức hình nha .
+
+Cảm ơn Aurelis đã cùng nhau tỏa sáng mong sắp tới mọi người sẽ càng ngày nổi bật hơn không sáng cũng sang nha✨.
+
+Xin cảm ơn nhóm Dự án ma cảm ơn một chị a giấu tên đã đồng hành cùng với bạn h tạo ra dự án 4 giờ sáng đòi ngắm bình minh xong ngủ một góc mỗi nơi cảm ơn đã sát cánh cùng dự án chân thành cảm ơn 6 con gián.
+
+Cảm ơn 3 cô giáo Mầm Non tương lai đã cởi mở tạo cho nhóm khác một kỉ niệm khó quên e rất hân hạnh khi được làm quen với 3 chị chúc 3 chị luôn thành công và sống đúng với ước mơ của mình lớp diu ❤️.
+
+Cảm ơn chị Nhân đã đồng hành với em 3 đợt tập huấn mong chị em mình vẫn bền và đẹp nha em cảm ơn chị guộc rất nhiều chúc chị thành công thuận lợi trong mọi công việc lớp diuu❤️.
+
+Cảm ơn AN đã ngủ sớm mừng quá trời mừng mong bạn sẽ tiếp tục phát huy và tự tin nói nhiều hơn nha bạn đã làm rất tốt rồi mình rất ấn tượng.
+
+Cuối cùng em xin cảm ơn tất cả mọi người đã tạo nên một buổi tập huấn ai cũng vui cũng thoải mái mong mọi người sẽ luôn thành công và tự tin hơn chân thành cảm ơn ạ.
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi đến tất cả mọi người
+ngay: 11/11/2026
+ky: HN
+
+---
+Cảm ơn mọi người đã là phần kí ức đẹp nhất của mình, mình rất vui khi được đi đợt tập huấn lần này, được gặp gỡ những người xa lạ , được trò chuyện được lắng nghe những bài học có thể mình chưa biết. Tuy là thời gian cạnh nhau không nhiều nhưng nó mang lại nhiều niềm vui, hạnh phúc. Hơi bí văn nhưng mà rất là cảm ơn mọi người đã là phần kí ức đẹp của nhau. Hi vọng sẽ gặp lại nhau!! Chúc mọi người thành công hơn trong công việc. Mãi nhớ!
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Những mầm xanh của Youth Bond🪴
+ngay: 11/11/2026
+anh:../khongnoithitnoi/hinhanh/image (2).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Một người trong Youth Bond
+
+---
+Thật sự, mình cảm thấy rất vui và biết ơn vì đã có cơ hội trở thành một phần của Youth Bond, được gặp gỡ, đồng hành và gắn bó với mọi người trong hành trình vừa qua. Ban đầu, có thể chúng ta chưa thật sự hiểu nhau, mỗi người một tính cách, một suy nghĩ và một cách thể hiện khác nhau. Nhưng chính những lần cùng nhau trò chuyện, học hỏi, chia sẻ và trải nghiệm đã giúp mình cảm nhận được sự kết nối ngày càng lớn giữa chúng ta.
+
+Cảm ơn mọi người vì đã cùng nhau tạo nên một tập thể tràn đầy tiếng cười, có sự sẻ chia và có những khoảnh khắc thật đáng nhớ. Cảm ơn vì mỗi người đều mang đến một màu sắc riêng, để Youth Bond không chỉ là một nhóm mà còn là nơi chúng ta có thể học hỏi, trưởng thành và cảm thấy mình thuộc về. 
+
+Sau hành trình vừa qua, mình nhận ra rằng giá trị của Youth Bond không chỉ nằm ở những gì chúng ta đã làm được, mà còn ở những gì mỗi người học được từ nhau. Mình hy vọng tất cả chúng ta đều có thể trở thành phiên bản tốt hơn của chính mình, tự tin hơn, chủ động hơn và biết cách phối hợp để cùng tạo nên những giá trị tích cực cho tập thể.
+
+Cảm ơn vì chúng ta đã gặp nhau, đã cùng bắt đầu và đang cùng nhau trưởng thành. Mong rằng Youth Bond sẽ không chỉ là một kỷ niệm đẹp của tuổi trẻ, mà còn là nơi chúng ta có thể tự hào khi nhìn lại, vì đã cùng nhau cố gắng, cùng nhau thay đổi và cùng nhau tạo nên những điều ý nghĩa.
+
+Thương và trân trọng tất cả mọi người. 💙
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi đến Trung Anh
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn em đã chịu lắp cá cho chị dù chưa biết chị là ai.
+Chúc em luôn thành công, hạnh phúc và gặp thật nhiều điều tốt đẹp trên hành trình của mình. Hẹn một dịp gần nhất, mình lại cùng nhau đi bơi nhé!
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌GỬI: NGÔI NHÀ MANG TÊN SỐNG GIỜ  MỸ
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (3).png
+ky: Một người trong Youth Bond
+---
+Cảm ơn mọi người vì đã ở bên em từ những ngày đầu tập huấn cho đến tận hôm nay. Có những người em đã quen từ trước, cũng có những người mãi đến sau đợt 1 chúng ta mới có cơ hội gặp gỡ và đồng hành cùng nhau. Vậy mà chẳng biết từ lúc nào, mọi người đã trở thành những người thật đặc biệt trong lòng em.
+
+Mỗi người trong nhà đều có một màu sắc, một thế mạnh và tài năng riêng. Đôi lúc nhìn mọi người, em lại thấy bản thân mình chẳng có gì quá nổi bật. Nhưng điều khiến em biết ơn nhất là dù em còn nhiều thiếu sót, mọi người vẫn luôn ở bên, kiên nhẫn chỉ bảo, giúp đỡ và cho em cơ hội để học hỏi, trưởng thành hơn từng ngày. Mọi người không chỉ giúp em biết mình cần làm gì, mà còn khiến em tin rằng mình cũng có thể trở thành một phiên bản tốt hơn của chính mình.
+
+Ở trong nhà, em gần như là đứa nhỏ nhất, nhưng độ láo thì chắc chẳng thua ai, suốt ngày kiếm chuyện với mọi người 😭 Vậy mà chẳng những không bị đuổi khỏi nhà, em còn được mọi người thương, bao dung và chiều chuộng rất nhiều. Chính những điều tưởng chừng nhỏ bé ấy lại khiến em cảm thấy mình thật may mắn khi được gặp và trở thành một phần của mọi người.
+
+Em không biết chúng ta sẽ còn đồng hành cùng nhau bao lâu, cũng chẳng biết sau này mỗi người sẽ đi đến đâu. Vì vậy, em luôn tự nhắc mình phải trân trọng thật nhiều những khoảnh khắc hiện tại, những lần cùng nhau cười nói, làm việc, những lúc được mọi người chỉ bảo và cả những chuyện nhỏ nhặt mà có lẽ sau này nhớ lại sẽ thấy thương vô cùng.
+
+Cảm ơn mọi người vì đã cho em một nơi để học hỏi, để trưởng thành, để được là chính mình và để cảm nhận rằng mình thật sự thuộc về một tập thể. Mong rằng dù sau này mỗi người có một hành trình riêng, chúng ta vẫn sẽ nhớ về nhau bằng những điều đẹp đẽ nhất, vẫn giữ trong lòng tình cảm của những người từng cùng nhau đi qua một đoạn thanh xuân và xem nhau như anh em trong một gia đình.
+
+**Thương và biết ơn cái NGÔI NHÀ này nhiều lắm!** 💗
+
+*Mà nhà mình hơi đông, nhiều chi nhánh quá rồi, tới chi nhánh thứ 5 luôn á trời =)) Nhưng dù có bao nhiêu chi nhánh thì mong rằng tình thương vẫn luôn là một nha.*
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude:💌GỬI: Chị Ngọc
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn chị vì đã luôn mang đến cho em những nguồn năng lượng tích cực và những nụ cười thật ấm áp. Em rất thích những khoảnh khắc hai chị em cứ nhìn nhau rồi bật cười, chẳng cần một lý do cụ thể nào. Có lẽ chính những điều giản dị như thế đã khiến khoảng thời gian ở bên chị trở nên thật đáng nhớ đối với em.
+
+Không biết chị còn nhớ không, nhưng trong bữa ăn đầu tiên, chị đã ngồi cùng bàn với em. Khi ấy chị khá ít nói, em trò chuyện mà chị cứ im ru, khiến em nghĩ chị là một người trầm tính. Vậy mà càng có cơ hội tiếp xúc, em càng nhận ra một khía cạnh rất khác ở chị: năng động, vui vẻ và đáng yêu. Thật vui vì em đã có cơ hội hiểu chị nhiều hơn, thay vì chỉ dừng lại ở những ấn tượng ban đầu.
+
+Bên cạnh những điều đáng yêu ấy, em thật sự rất ngưỡng mộ chị. Em biết con đường ngôn ngữ mà chị đang theo đuổi không hề dễ dàng, bởi bản thân em cũng từng có cơ hội trải nghiệm những khó khăn của nó. Vì vậy, khi nhìn thấy chị không ngừng học hỏi, phát triển và từng bước tiến gần hơn đến những điều mình mong muốn, em cảm thấy rất khâm phục. Mong rằng chị sẽ luôn giữ vững niềm tin, sự kiên trì và tình yêu dành cho con đường mình đã chọn. Chúc chị sẽ ngày càng trưởng thành, đạt được thật nhiều thành tựu và luôn tự hào về những nỗ lực của chính mình.
+
+Em hy vọng rằng dù sau này mỗi người có những hành trình riêng, chúng ta vẫn sẽ có cơ hội gặp lại, cùng nhau chia sẻ những câu chuyện và giữ mãi những kỷ niệm đẹp đã có. Cảm ơn chị vì đã xuất hiện trong khoảng thời gian này của em, vì những nụ cười, sự tích cực và những điều tốt đẹp mà chị đã vô tình mang đến.
+
+Chúc chị luôn hạnh phúc, bình an và tỏa sáng theo cách riêng của mình. Mong rằng trên hành trình phía trước, chị sẽ luôn gặp được những điều xứng đáng với sự cố gắng và trái tim tuyệt vời của chị. 💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi: Chị Trâm,Chị H.Như,Chị Ngọc,Chị Vanh.
+ngay: 11/11/2026
+
+ky:Em Trường
+---
+Hello 4 chị, mỗi ng đồg hành cùg em qua các đợt tập huân, tuy 4 ngày ko dài nhưng em vẫn lun giữ lấy từng chút kỷ niệm và lưu giữ ko lm cho nó tan biến.
+
+
+
+Em là 1 ng khá nhút nhát và hướng nội, nhưng kia tiếp xúc vs các chj thì em đã bước ra vùng tối mà chính e nghĩ em đã bước dc, mỗi chj cho em 1 cảm giác ko giống nhau nhưng cùng 1 mục tiêu đó là " vẫn tích cực và tâm sự nhìu vào" đó là em nhớ nhất khi dc tiếp xúc và lm vc vs các chj.
+
+
+
+Cảm ơn chj Trâm, người đã đến đầu tiên và kéo em ra khỏi sự ít nói, chj cho em dc cảm giác có 1 ng chj, 1 ng bn, 1 ng em có thể tin tưởng nói chuyện và ko cần phải giấu cảm xúc, qtam em rằg em có ăn chưa hoặc làm cho em những điều nhỏ nhặt, là 1 ng chj mà e hằng mong ước, minh đợt sau chj em mình sẽ gặp lại.Cảm ơn chj 2.
+
+
+
+Cảm ơn chj H.Như, người em dc chug team và cho em bt dc rằg em có 1 ng trưởng nhóm tuyệt vời, tự tin và slay, cảm ơn chj vì những ý tưởng hay, vì những bài học, vì những lần cùg nhau đưa nhóm vươn lên từ vị trí 5 lên vị trí 2, tuy chj ít nói nhưng em bt dc chj là 1 ng rấtt tâm huyết vs vc mình lm và sự cố gắng của chj đã nói lên điều đó, cảm ơn chj đã cố gắng cho team AURELIS và cho em dc những kỉ niệm khó quên. Cảm ơn chj vì tất cả.
+
+
+
+Cảm ơn chj Ngọc, lần đầu tiên em bt 1 ng có thể giỏi tiếng Nhật như chị, nó làm em có thêm độg lực để hc tiếp thứ ngôn ngữ này dù có những lúc mún bỏ cuộc vì quá khó, chj có 1 năng lượng tích cực siu siu nhìu, luôn vui vẻ và hài hước, luôn và người kể những chuyện hài hay khấy độg bầu không khí khi quá yên ắng, em mong muốn khi gặp mình chúg ta sẽ có những kỷ niệm đẹp khi lm vc vs nhau nx. Em cảm ơn chj.
+
+
+
+Cuối cùng là chj V.anh, em gặp chj vào lúc em ko bt tâm sự vs ai, chj đã đến và nói chuyện cùg em, lm quen và tâm sự vs em nhìu thứ, 2 chj em đi vòng quanh siu thị nhưng mãi nói chuyện nên ko quan tâm giờ, và đêm cuối đã đc vui chơi, tâm sự vs nhau tht lâu trc khi chia tay, em mong đêm đó trôi qua lâu 1 chút để ta có thể típ những câu chuyện còn dang dở, lời hẹn đi biển ngắm bình mình hay những tâm sự thầm kín mà chj và em tin tưởng để kể nhau nghe. Em cảm chj vì những kỷ niệm chj để lại cho em và em sẽ lưu giữ nó.
+
+
+
+Lời nói cuối, em xin cảm ơn các ah/chj, và thầy cô đã nâng đỡ và giúp e phát triển bản thân, đã giúp em quen dc nhìu bn ms và cho em dc là chính em mà ko cần phải cố gắng gượng ép, cảm ơn tất cả mọi ng vì mọi thứ.
+
+
+
+Em mog cho các chj và mn sẽ thành côg trên con đường mình đag đi và cả phía trc, chúc mn sẽ ln tích cực và vui vẻ, mog sự tiêu cực "đi ra kia chơi !!" Và hy vọng đợt sau ta lai gặp nhau và cười tht tươi nhé !
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude:Gửi đến nhóm BCTech và tất cả mọi người trong buổi tập huấn 💗
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (2).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Một người trong Youth Bond
+---
+Đầu tiên, em muốn gửi lời cảm ơn đến anh Văn và anh Hải, vì đã luôn yêu thương và xem em như một đứa em gái. Đặc biệt, em cảm ơn anh Văn vì đã trao cho em cơ hội được thực hiện những điều mà trước đây em từng nghĩ đến nhưng chưa đủ can đảm để bắt đầu. Cảm ơn anh vì đã tin tưởng, tạo điều kiện và giúp em có cơ hội vượt qua những giới hạn của chính mình.
+
+Tiếp theo là chị Diễm, người luôn ủng hộ, quan tâm và dành cho em những lời khuyên chân thành. Cảm ơn chị vì chưa bao giờ ngại chỉ bảo, nhắc nhở hay dạy dỗ em những lúc cần thiết. Em thật sự biết ơn sự quan tâm ấy, bởi em hiểu rằng không phải ai cũng sẵn lòng dành thời gian và tình cảm để giúp một người khác trưởng thành hơn. Chị vừa tốt bụng, vừa xinh đẹp, lại luôn khiến em cảm nhận được sự ấm áp của một người chị thật sự. 
+
+Cảm ơn Dương, Hương và Chi vì đã đồng hành cùng em trong khoảng thời gian vừa qua. Cảm ơn mọi người vì những lần cùng nhau làm việc, sẻ chia và tạo nên những kỷ niệm mà em sẽ luôn trân trọng. Có lẽ điều đáng quý nhất không chỉ là những gì chúng ta đã cùng làm, mà còn là những tình cảm và sự gắn kết được hình thành trong suốt hành trình ấy.
+
+Cảm ơn anh Trung Anh, dù mới có cơ hội gặp gỡ và tiếp xúc, nhưng anh đã để lại trong em một ấn tượng rất đẹp bởi cách nói chuyện nhẹ nhàng và sự gần gũi của mình. 
+
+Và chị Vy bên trường GTVT nữa, một người vừa xinh đẹp, vừa đáng yêu, lại để lại cho em những ấn tượng rất dễ thương. Mong rằng sau này chúng ta sẽ còn có thêm nhiều cơ hội gặp gỡ, trò chuyện và hiểu nhau hơn nha chị.
+
+Cuối cùng, em muốn cảm ơn tất cả mọi người vì đã luôn tôn trọng những ý kiến và suy nghĩ của em. Cảm ơn vì mỗi lần em đưa ra quan điểm, mọi người đều sẵn lòng lắng nghe, trao đổi và không khiến em cảm thấy mình bị phủ nhận. Em thật sự trân trọng một môi trường mà mỗi người đều có tiếng nói riêng, được tôn trọng và được tự do thể hiện bản thân. Đối với em, đây không chỉ là sự tôn trọng trong công việc mà còn là một điều rất đẹp trong cách mọi người đối xử với nhau.
+
+Em không biết phải nói bao nhiêu lời cảm ơn mới đủ, nhưng em thật sự rất vui và biết ơn vì đã có cơ hội gặp gỡ, đồng hành và trở thành một phần của tập thể này. Mong rằng sau này, dù mỗi người có những hành trình riêng, chúng ta vẫn sẽ giữ lại những tình cảm đẹp đẽ dành cho nhau.
+
+**YÊU MỌI NGƯỜI NHIỀU LẮM!** 💗😘
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌Gửi: CHỜ CHÚT
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (1).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Chờ Chút
+---
+Mỗi người trong nhóm đều mang một màu sắc và thế mạnh riêng. Có người năng động, có người sáng tạo, có người lại khéo léo trong cách giao tiếp và kết nối mọi người. Nhưng điều em trân trọng nhất chính là sự hòa đồng, nhiệt tình và tinh thần luôn sẵn sàng hỗ trợ nhau của tất cả mọi người. Mỗi người một thế mạnh, nhưng khi cùng nhau, chúng ta lại tạo nên một tập thể có thể bổ trợ và hoàn thiện cho nhau.
+
+Thật ra, có những người ban đầu em từng nghĩ rằng sẽ rất khó để làm việc chung, hoặc đơn giản là chưa hình dung được chúng ta sẽ phối hợp với nhau như thế nào. Nhưng sau một khoảng thời gian đồng hành, em lại bất ngờ khi nhận ra mọi người có thể kết hợp với nhau rất ăn ý. Điều đó khiến em hiểu rằng đôi khi, những ấn tượng ban đầu chưa thể nói lên tất cả. Chỉ khi thật sự cho nhau cơ hội, cùng trải nghiệm và cùng cố gắng, chúng ta mới có thể nhìn thấy những điều tốt đẹp mà trước đây mình chưa từng nhận ra ở đối phương.
+
+Cảm ơn mọi người vì đã cùng nhau tạo nên những kỷ niệm thật đáng nhớ, vì những lần hỗ trợ, sẻ chia và cùng nhau cố gắng để mọi việc trở nên tốt đẹp hơn. Mong rằng dù sau này có đi đến những nơi khác nhau, gặp gỡ những con người mới hay làm việc trong những môi trường khác, chúng ta vẫn sẽ giữ được sự nhiệt tình, tinh thần cầu tiến và lòng chân thành dành cho những người xung quanh.
+
+Và hy vọng rằng, khi nhớ về khoảng thời gian này, chúng ta sẽ luôn tự hào vì đã từng có một tập thể như thế, nơi mỗi người đều góp một phần nhỏ bé của mình để tạo nên những điều thật đẹp. 💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: Gửi đến nhóm SỐNG GIỜ MỸ
+ngay: 11/11/2026
+anh:  ../khongnoithitnoi/hinhanh/image (3).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Một người trong Youth Bond
+---
+Em cảm ơn mọi người vì đã đồng hành cùng em trong car ba đợt tập huấn , em không nghĩ mình sẽ mở lòng và có thể cùng chơi và trò chuyện với mọi người.
+
+Mọi người cũng giúp em hiểu và nhận ra được rất nhiều điều mới cũng như giúp đỡ em để em có thể mạnh dạn hơn.
+
+Mong được gặp mặt mọi người vào nhiều dịp khác nhau.
+
+Cũng gửi đến thành viên mới của nhóm là TA , nào có dịp chúng ta cùng chụp ảnh nhóm nhé! Hãy sớm hoà nhập với nhóm nè 🩷
+
+Em nhớ mọi người rất nhiều!
+
+Và lời cuối cùng là mọi người không sống giờ Mỹ nữa hả. Sao mọi người ngủ sớm quá dị ! 🥰
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: cam-on
+tieude: 💌 Gửi chị Mai - Cán bộ dự án Tp. Hồ Chí Minh 
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (4).png
+chuthich: Một trong số hình ảnh từ Y Wave
+ky: Một người trong Youth Bond
+---
+Em rất biết ơn và trân trọng cơ hội khi được đi đến Hà Nội lần đó. Chị đã luôn support, chia sẻ và tận tâm với em , bạn Tuấn và anh Hải. Có lẽ điều em nhận được sau chuyến đi đợt đó không chỉ là những kiến thức , kĩ năng hay trải nghiệm mà còn là sự nhìn nhận, yêu thương từ các cô chú , thầy cô , anh chị , bạn bè. Sau chương trình, em đã được nhận những lời chúc, những lời động viên mà em tưởng chừng như là không thể vì em nghĩ em là một người nhút nhát , kém cỏi thế này mà lại nhận được rất nhiều sự yêu thương và quan tâm từ quý thầy cô , anh chị và bạn bè nhiều đến thế. Chị đã giúp em nhìn nhận và thay đổi góc nhìn về việc học Cao đẳng chưa chắc đã thiệt thòi hơn học Đại học và không có gì phải xấu hổ , tự ti cả. Chính điều đó đã giúp em nhìn nhận lại bản thân và tự tin hơn trên chặng đường phía trước. Có lẽ em vẫn còn nhút nhát , tự ti nhưng em sẽ luôn cố gắng và thay đổi nó ạ. Những điều chị đã từng nói, đã từng chia sẻ thì em nghĩ là em phải làm thôi! Phải làm thì mới biết mình có thể đi đến đâu và sẽ gặp được phiên bản nào khác của chính mình mà mình đang chờ đợi! Mong rằng sắp tới chúng ta sẽ hoạt động thật sôi nổi , thành công và luôn tốt đẹp ạ. Một lần nữa , em xin cảm ơn chị vì tất cả, chúc chị sức khoẻ,may mắn và thành công ạ 
+</script>
+
+
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌 Gửi: Quốc Thắng
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn anh vì đã dành cho em những lời chia sẻ thật chân thành, dù chúng ta chỉ mới gặp nhau lần đầu. Ngay từ lần gặp đầu tiên, em đã có ý mời anh và mọi người cùng uống sinh tố lúa mạch =))^^. Em rất vui khi anh đã cảm nhận được sự chân thành ấy, chỉ tiếc là hôm đó anh có việc bận nên chưa thể tham gia cùng mọi người.
+
+Mãi đến ngày cuối cùng, chúng ta mới có cơ hội thật sự kết nối và trò chuyện với nhau. Qua những câu chuyện anh chia sẻ, em cảm nhận được sự gần gũi và đồng điệu, có những điều khiến em nghĩ đến chính mình hồi cấp 3. Em rất trân trọng việc anh có thể thoải mái chia sẻ những suy nghĩ và cảm xúc của mình, bởi dù mới gặp lần đầu, em vẫn có cảm giác như chúng ta đã quen biết từ trước.
+
+Em cũng thật sự ngưỡng mộ sự tự tin và tài giỏi của anh. Mong rằng anh sẽ luôn tin tưởng vào bản thân, mạnh dạn thể hiện những điều mình có và không ngừng phát triển trên hành trình phía trước. Đừng quên rằng anh có rất nhiều điểm đáng quý và xứng đáng với những điều tốt đẹp mà mình đang hướng đến nhé!
+
+Hy vọng rằng lần gặp tiếp theo, em sẽ được nhìn thấy một phiên bản trưởng thành, tự tin và ngày càng hoàn thiện hơn của anh. Hẹn gặp lại anh vào một dịp gần nhất nha! Và nếu có cơ hội, em nhất định sẽ thực hiện lời mời sinh tố lúa mạch còn dang dở hôm ấy. Hahah, lần sau không được từ chối nữa đâu đó! 💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude:💌 Gửi Ban Chủ nhiệm Youth Bond,
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image.png
+ky: Một người trong Youth Bond
+---
+Có lẽ trong suốt thời gian qua, mình chưa có dịp nói thật đầy đủ lời cảm ơn đến mọi người.
+
+Mình xin cảm ơn tất cả mọi người vì đã cùng mình bắt đầu từ những ý tưởng còn rất nhỏ, cùng nhau bàn bạc, góp ý, chia sẻ và từng bước xây dựng nên Youth Bond của ngày hôm nay. Có những lúc mình còn nhiều băn khoăn, áp lực hay chưa biết phải bắt đầu từ đâu, nhưng sự đồng hành của mọi người đã giúp mình có thêm động lực để tiếp tục.
+
+Youth Bond có thể vẫn còn nhiều điều cần hoàn thiện, nhưng mình tin rằng điều quý giá nhất mà nhóm đang có chính là những con người sẵn sàng đồng hành cùng nhau.
+
+Cảm ơn Ban Chủ nhiệm vì đã tin tưởng, chia sẻ và cùng mình tạo nên một Youth Bond thật sự thuộc về tất cả chúng ta. 💙
+
+
+
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌 Gửi anh Hải - người anh của tôi 
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Em biết đôi lúc anh cũng buồn vì mình chưa thể hiện được hết bản thân mình muốn vì một số rào cản. Anh đã nói với em là đợt này anh sẽ chủ động nói nhiều hơn và em rất mong đợi điều đó. Và đúng là anh đã nói nhiều hơn rồi nè. Em muốn nhắn nhủ với anh là anh giỏi lắm , cứ tự tin lên anh nhaa , cái gì mình yếu thì mình hãy làm nó nhiều lên là cải thiện được thuii nè. Mong là lần tới sẽ được nhìn thấy anh ở một phiên bản khác và đặc biệt hơn nhaa
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌 Gửi chị Mai - Cán bộ dự án Tp. Hồ Chí Minh
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (4).png
+chuthich: Một trong số hình ảnh từ Y Wave
+ky: Một người trong Youth Bond
+---
+Em rất biết ơn và trân trọng cơ hội khi được đi đến Hà Nội lần đó. Chị đã luôn support, chia sẻ và tận tâm với em , bạn Tuấn và anh Hải. Có lẽ điều em nhận được sau chuyến đi đợt đó không chỉ là những kiến thức , kĩ năng hay trải nghiệm mà còn là sự nhìn nhận, yêu thương từ các cô chú , thầy cô , anh chị , bạn bè. Sau chương trình, em đã được nhận những lời chúc, những lời động viên mà em tưởng chừng như là không thể vì em nghĩ em là một người nhút nhát , kém cỏi thế này mà lại nhận được rất nhiều sự yêu thương và quan tâm từ quý thầy cô , anh chị và bạn bè nhiều đến thế. Chị đã giúp em nhìn nhận và thay đổi góc nhìn về việc học Cao đẳng chưa chắc đã thiệt thòi hơn học Đại học và không có gì phải xấu hổ , tự ti cả. Chính điều đó đã giúp em nhìn nhận lại bản thân và tự tin hơn trên chặng đường phía trước. Có lẽ em vẫn còn nhút nhát , tự ti nhưng em sẽ luôn cố gắng và thay đổi nó ạ. Những điều chị đã từng nói, đã từng chia sẻ thì em nghĩ là em phải làm thôi! Phải làm thì mới biết mình có thể đi đến đâu và sẽ gặp được phiên bản nào khác của chính mình mà mình đang chờ đợi! Mong rằng sắp tới chúng ta sẽ hoạt động thật sôi nổi , thành công và luôn tốt đẹp ạ. Một lần nữa , em xin cảm ơn chị vì tất cả, chúc chị sức khoẻ,may mắn và thành công ạ
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: Gửi em Trường
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Hi Trường, một cậu bé ở đợt 1 ít nói hơi nhút nhát nhưng điều khiến chị bất ngờ là em đã dám nói lên ý kiến của mình, chủ động làm nhóm trưởng. Một cậu bé dũng cảm, em chịu lắng nghe mọi người, muốn kết nối mọi người lại với nhau bằng những trò chơi, một cậu bé điềm tĩnh. Cảm ơn em vì đã cho chị thấy được những điều ấy để bản thân chị cũng cần nhìn nhận lại và thay đổi. Ở đợt 2, em đã thay đổi rất nhiều, em đã nói nhiều hơn, trình bày quan điểm cũng như dám đứng lên phản biện. Chị thật sự rất vui vì em đã phát triển tốt như vậy. Mà nhaaa, nhớ ăn nhiều vào cho chị. Đợt 3 chị hông tham gia được nên chưa có kiểm tra em đâu á. Mong em có thật nhiều sức khỏe, cố gắng học tập thật giỏi nè. 
+
+Cảm ơn em ❤️
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌 Gửi các em: Hương, Ngọc, Bảo, Thanh, Sang, Trường
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn các em đã giúp chị hoàn thành mục tiêu lớn nhất của chị trong đợt tập huấn này, đó là có thêm bạn bè mới.
+
+
+
+Chị không giỏi thể hiện tình cảm nên không biết như nào là đủ, nhưng chị rất vui vì đã có cơ hội làm việc nhóm cùng các em, cùng nhau trò chuyện và biết ít nhiều về tính cách của mỗi bạn.
+
+
+
+Chị chúc Hương luôn là cô gái tươi vui, năng lượng. Nhớ đi khám xương khớp chứ không được ngồi than hoài nhen
+
+Chị chúc Ngọc luôn xinh đẹp và thành công trên hành trình học ngôn ngữ. Mong có dịp đợt sau, chị em mình vẫn ở cùng phòng và nhớ đem theo nước giặt đồ =))
+
+Chị chúc Bảo sẽ trở thành một nghệ sĩ đa tài như những gì em đang theo đuổi
+
+Chị chúc Thanh học tập tốt, mong có thể dành nhiều thời gian để trò chuyện với em hơn nữa
+
+Chị chúc bạn Sang luôn luôn nhiều năng lượng như những gì chị đã nhìn thấy ở em
+
+Và cuối cùng là chị chúc Trường có nhiều sức khoẻ, thành công trong ngành học mà em đang học tập, chúc em vẫn luôn yêu thương gia đình và giúp đỡ mọi người như cái cách mà em đã kể chị biết. Lần sau gặp lại thì phải +5KG nha 🙄
+
+
+
+Chúc các em sẽ luôn thành công trên hành trình phía trước, 
+
+pround of u.
+
+Hẹn gặp lại tất cả ❤️
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌Gửi: CHỜ CHÚT
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (1).png
+chuthich: Một số hình ảnh trong Youth Bond
+ky: Chờ Chút
+---
+Mỗi người trong nhóm đều có một điểm mạnh riêng, người thì năng động, người sáng tạo, người lại rất khéo léo trong cách giao tiếp. Nhưng điểm chung của tất cả mọi người là đều hòa đồng, nhiệt tình và luôn cố gắng hết mình để giúp đỡ và hỗ trợ lẫn nhau.
+
+Thật ra, có những người ban đầu em không nghĩ mình có thể làm việc chung được, vậy mà sau khoảng thời gian đồng hành, em lại thấy mọi người phối hợp với nhau rất ăn ý. Qua đó, em nhận ra rằng đôi khi chỉ cần cho nhau cơ hội, chúng ta sẽ khám phá được nhiều điều bất ngờ ở đối phương.
+
+Cảm ơn mọi người vì đã cùng nhau tạo nên những kỷ niệm đáng nhớ. Mong rằng sau này, dù có đi đâu hay làm việc với những ai, chúng ta vẫn sẽ giữ được sự nhiệt tình, hòa đồng và tinh thần hỗ trợ nhau như vậy nhé! 💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: Gửi đến anh chị trong YOUTH BOND và một số người bạn mới 
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (5).png
+chuthich: Một số hình ảnh trong Youth Bond
+ky: Một người trong Youth Bond
+---
+Xin chào mọi người! ❤️
+
+Sau khi trở về, những ký ức trong em vẫn cứ như ngày hôm qua, như thể mọi người vẫn còn ở đây vậy á. Có những lời em vẫn chưa kịp nói một cách trọn vẹn, mà đôi khi em chỉ có thể gói gọn trong hai chữ: *“Em cảm ơn anh/chị.”*
+
+Nếu phải nói hết những niềm vui mà **Youth Bond** đã mang đến cho em, có lẽ một vài dòng này vẫn chưa đủ. Trước tiên, em xin được gửi lời cảm ơn đến đại gia đình **Youth Bond**. Có lẽ em vẫn còn quá trẻ, đôi lúc hơi tham chơi một chút, nhưng anh chị vẫn luôn ở đó, tạo cơ hội để em được tỏa sáng, được thể hiện bản thân và được nói nhiều hơn. Em thật sự rất trân trọng điều đó ạ.
+
+Cảm ơn anh **Thuận**, cảm ơn anh **Văn**, cảm ơn anh **Trọng Nhân**, cảm ơn chị **Linh**, cảm ơn chị **Diễm** dịu dàng – nhớ chỉ em uốn lượn nha trùi =))). Cảm ơn chị **Kiều**, em mong sắp tới sẽ có duyên gặp lại chị. Và cảm ơn **Nghi** đã support cho tui nha, lớp diuuuu. ❤️
+
+Giờ tới lượt nhóm **“SỐNG GIỜ MỸ”**.
+
+Nói tới đây thì chắc mọi người trong nhóm đã biết nhau rồi nha. Mong rằng sắp tới nhóm mình sẽ đầy đủ thành viên và cùng check-in một bức hình thật xinh nhé. NHA ANH **TRƯỜNG**!!!
+
+Cảm ơn **Aurelis** vì đã cùng nhau tỏa sáng. Mong rằng trong những chặng đường sắp tới, mọi người sẽ ngày càng nổi bật hơn, không sáng thì cũng sang nhaaa. ✨✨
+
+Xin gửi lời cảm ơn đến nhóm **Dự án ma**. Cảm ơn một chị *a giấu tên* đã đồng hành cùng bạn H tạo nên dự án 4 giờ sáng đòi ngắm bình minh, xong rồi ngủ một góc mỗi nơi =))). Cảm ơn mọi người đã sát cánh cùng dự án, chân thành cảm ơn 6 con gián đã góp mặt trong hành trình đáng nhớ này. 
+
+Cảm ơn 3 cô giáo Mầm Non tương lai đã vô cùng cởi mở và tạo nên những kỷ niệm khó quên cho nhóm. Em rất hân hạnh khi được làm quen với 3 chị. Chúc các chị luôn thành công, hạnh phúc và sống đúng với những ước mơ của mình. Lớp diuuu. ❤️
+
+Cảm ơn chị Nhân đã đồng hành cùng em qua 3 đợt tập huấn. Mong rằng tình chị em mình vẫn luôn bền và đẹp nha. Em cảm ơn chị guộc rất nhiều, chúc chị luôn thành công và thuận lợi trong mọi công việc. Lớp diuuu. ❤️
+
+Cảm ơn AN đã ngủ sớm, mừng quá trời mừng =))). Mong bạn sẽ tiếp tục phát huy và tự tin nói nhiều hơn nha. Bạn đã làm rất tốt rồi, mình thật sự rất ấn tượng .
+
+Cuối cùng, em xin gửi lời cảm ơn đến tất cả mọi người đã cùng nhau tạo nên một buổi tập huấn thật vui vẻ, thoải mái và đầy ắp những kỷ niệm đáng nhớ. Cảm ơn vì đã cho em cơ hội được gặp gỡ, kết nối, trải nghiệm và có thêm những người tuyệt vời trong hành trình của mình.
+
+Mong rằng trên những chặng đường sắp tới, mọi người sẽ luôn thành công, tự tin hơn, tiếp tục tỏa sáng theo cách riêng của mình và dù có đi đâu, làm gì thì chúng ta vẫn sẽ nhớ về nhau bằng những ký ức thật đẹp.
+
+**Chân thành cảm ơn mọi người vì đã trở thành một phần thanh xuân của em.** ❤️
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: dong-vien
+tieude: 💌GỬI: NGÔI NHÀ MANG TÊN SỐNG GIỜ  MỸ
+anh:../khongnoithitnoi/hinhanh/image (3).png
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn mọi người vì đã ở bên em từ những ngày đầu tập huấn cho đến tận hôm nay. Có những người em đã quen từ trước, cũng có những người mãi đến sau đợt 1 chúng ta mới có cơ hội gặp gỡ và đồng hành cùng nhau. Vậy mà chẳng biết từ lúc nào, mọi người đã trở thành những người thật đặc biệt trong lòng em.
+
+Mỗi người trong nhà đều có một màu sắc, một thế mạnh và tài năng riêng. Đôi lúc nhìn mọi người, em lại thấy bản thân mình chẳng có gì quá nổi bật. Nhưng điều khiến em biết ơn nhất là dù em còn nhiều thiếu sót, mọi người vẫn luôn ở bên, kiên nhẫn chỉ bảo, giúp đỡ và cho em cơ hội để học hỏi, trưởng thành hơn từng ngày. Mọi người không chỉ giúp em biết mình cần làm gì, mà còn khiến em tin rằng mình cũng có thể trở thành một phiên bản tốt hơn của chính mình.
+
+Ở trong nhà, em gần như là đứa nhỏ nhất, nhưng độ láo thì chắc chẳng thua ai, suốt ngày kiếm chuyện với mọi người 😭 Vậy mà chẳng những không bị đuổi khỏi nhà, em còn được mọi người thương, bao dung và chiều chuộng rất nhiều. Chính những điều tưởng chừng nhỏ bé ấy lại khiến em cảm thấy mình thật may mắn khi được gặp và trở thành một phần của mọi người.
+
+Em không biết chúng ta sẽ còn đồng hành cùng nhau bao lâu, cũng chẳng biết sau này mỗi người sẽ đi đến đâu. Vì vậy, em luôn tự nhắc mình phải trân trọng thật nhiều những khoảnh khắc hiện tại, những lần cùng nhau cười nói, làm việc, những lúc được mọi người chỉ bảo và cả những chuyện nhỏ nhặt mà có lẽ sau này nhớ lại sẽ thấy thương vô cùng.
+
+Cảm ơn mọi người vì đã cho em một nơi để học hỏi, để trưởng thành, để được là chính mình và để cảm nhận rằng mình thật sự thuộc về một tập thể. Mong rằng dù sau này mỗi người có một hành trình riêng, chúng ta vẫn sẽ nhớ về nhau bằng những điều đẹp đẽ nhất, vẫn giữ trong lòng tình cảm của những người từng cùng nhau đi qua một đoạn thanh xuân và xem nhau như anh em trong một gia đình.
+
+**Thương và biết ơn cái NGÔI NHÀ này nhiều lắm!** 💗
+
+*Mà nhà mình hơi đông, nhiều chi nhánh quá rồi, tới chi nhánh thứ 5 luôn á trời =)) Nhưng dù có bao nhiêu chi nhánh thì mong rằng tình thương vẫn luôn là một nha.*
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: Gửi Thu Diễm 
+ngay: 11/11/2026
+chuthich: Cảm ơn bạn
+ky: Một người đến từ Youth Bond
+---
+Không biết phải nói như nào nhỉ... Rất cảm ơn bạn vì thời gian qua đã luôn support, chia sẻ và giúp đỡ mình. Có những lúc mình mất phương hướng, thậm chí không biết phải làm sao nữa, áp lực lại dồn nén và bạn là người đã động viên, hỗ trợ và chia sẻ những điều đó với mình, mình rất biết ơn và trân trọng điều đó! Cảm ơn vì đã cho mình thấy mình không cô đơn trên hành trình này, tất cả mọi người luôn bên nhau. Mong rằng bạn sẽ luôn giữ nguồn năng lượng tích cực đó và lan tỏa đến mọi người nhé! Cảm ơn bạn rất nhiều.
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: Gửi đến 2 cục dàng của tôi: Minh Trường và Thuý Kiều
+ngay: 11/11/2026
+ky: Một người đến từ Youth Bond
+
+---
+Lần đầu tiên gặp ở đợt 1, mình chưa có hội nhiều để tiếp xúc với 2 bạn nhưng sau đợt 2 mình lại có cơ hội được làm việc chung với 2 bạn. Thực sự trong thâm tâm của mình rất quý tình cảm của 2 bạn rất nhiều
+
+Đầu tiên là Thuý Kiều, thực sự đợt 1 tui thấy Kiều là người vừa giỏi vừa đẹp gái, tôi rất khâm phục bản thân của bạn. 
+
+Tiếp theo là cục dàng của hai, Minh Trường em trai trong lòng chị. Qua những lần chị tiếp xúc với em, chị thấy em là người rất lễ phép, ngoan và rất biết quan tâm đến người khác. Chị quý em và thương em như em trai của chị vậy á 🥰.
+
+Chúc 2 cục dàng của lòng tôi sức khoẻ và đạt được nhiều thành công trong tương lai. Đặc biệt ldù sau này có như thế nào mình rất mong mình và hai bạn vẫn sẽ còn giữ  liên lạc với nhau🥹. Thương nhiều lắm ó🥹🥹
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: 💌GỬI: NGÔI NHÀ MANG TÊN SỐNG GIỜ  MỸ
+anh:../khongnoithitnoi/hinhanh/image (3).png
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn mọi người vì đã ở bên em từ những ngày đầu tập huấn cho đến tận hôm nay. Có những người em đã quen từ trước, cũng có những người mãi đến sau đợt 1 chúng ta mới có cơ hội gặp gỡ và đồng hành cùng nhau. Vậy mà chẳng biết từ lúc nào, mọi người đã trở thành những người thật đặc biệt trong lòng em.
+
+Mỗi người trong nhà đều có một màu sắc, một thế mạnh và tài năng riêng. Đôi lúc nhìn mọi người, em lại thấy bản thân mình chẳng có gì quá nổi bật. Nhưng điều khiến em biết ơn nhất là dù em còn nhiều thiếu sót, mọi người vẫn luôn ở bên, kiên nhẫn chỉ bảo, giúp đỡ và cho em cơ hội để học hỏi, trưởng thành hơn từng ngày. Mọi người không chỉ giúp em biết mình cần làm gì, mà còn khiến em tin rằng mình cũng có thể trở thành một phiên bản tốt hơn của chính mình.
+
+Ở trong nhà, em gần như là đứa nhỏ nhất, nhưng độ láo thì chắc chẳng thua ai, suốt ngày kiếm chuyện với mọi người 😭 Vậy mà chẳng những không bị đuổi khỏi nhà, em còn được mọi người thương, bao dung và chiều chuộng rất nhiều. Chính những điều tưởng chừng nhỏ bé ấy lại khiến em cảm thấy mình thật may mắn khi được gặp và trở thành một phần của mọi người.
+
+Em không biết chúng ta sẽ còn đồng hành cùng nhau bao lâu, cũng chẳng biết sau này mỗi người sẽ đi đến đâu. Vì vậy, em luôn tự nhắc mình phải trân trọng thật nhiều những khoảnh khắc hiện tại, những lần cùng nhau cười nói, làm việc, những lúc được mọi người chỉ bảo và cả những chuyện nhỏ nhặt mà có lẽ sau này nhớ lại sẽ thấy thương vô cùng.
+
+Cảm ơn mọi người vì đã cho em một nơi để học hỏi, để trưởng thành, để được là chính mình và để cảm nhận rằng mình thật sự thuộc về một tập thể. Mong rằng dù sau này mỗi người có một hành trình riêng, chúng ta vẫn sẽ nhớ về nhau bằng những điều đẹp đẽ nhất, vẫn giữ trong lòng tình cảm của những người từng cùng nhau đi qua một đoạn thanh xuân và xem nhau như anh em trong một gia đình.
+
+**Thương và biết ơn cái NGÔI NHÀ này nhiều lắm!** 💗
+
+*Mà nhà mình hơi đông, nhiều chi nhánh quá rồi, tới chi nhánh thứ 5 luôn á trời =)) Nhưng dù có bao nhiêu chi nhánh thì mong rằng tình thương vẫn luôn là một nha.*
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude:💌GỬI: Chị Ngọc
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Cảm ơn chị vì đã luôn mang đến cho em những nguồn năng lượng tích cực và những nụ cười thật ấm áp. Em rất thích những khoảnh khắc hai chị em cứ nhìn nhau rồi bật cười, chẳng cần một lý do cụ thể nào. Có lẽ chính những điều giản dị như thế đã khiến khoảng thời gian ở bên chị trở nên thật đáng nhớ đối với em.
+
+Không biết chị còn nhớ không, nhưng trong bữa ăn đầu tiên, chị đã ngồi cùng bàn với em. Khi ấy chị khá ít nói, em trò chuyện mà chị cứ im ru, khiến em nghĩ chị là một người trầm tính. Vậy mà càng có cơ hội tiếp xúc, em càng nhận ra một khía cạnh rất khác ở chị: năng động, vui vẻ và đáng yêu. Thật vui vì em đã có cơ hội hiểu chị nhiều hơn, thay vì chỉ dừng lại ở những ấn tượng ban đầu.
+
+Bên cạnh những điều đáng yêu ấy, em thật sự rất ngưỡng mộ chị. Em biết con đường ngôn ngữ mà chị đang theo đuổi không hề dễ dàng, bởi bản thân em cũng từng có cơ hội trải nghiệm những khó khăn của nó. Vì vậy, khi nhìn thấy chị không ngừng học hỏi, phát triển và từng bước tiến gần hơn đến những điều mình mong muốn, em cảm thấy rất khâm phục. Mong rằng chị sẽ luôn giữ vững niềm tin, sự kiên trì và tình yêu dành cho con đường mình đã chọn. Chúc chị sẽ ngày càng trưởng thành, đạt được thật nhiều thành tựu và luôn tự hào về những nỗ lực của chính mình.
+
+Em hy vọng rằng dù sau này mỗi người có những hành trình riêng, chúng ta vẫn sẽ có cơ hội gặp lại, cùng nhau chia sẻ những câu chuyện và giữ mãi những kỷ niệm đẹp đã có. Cảm ơn chị vì đã xuất hiện trong khoảng thời gian này của em, vì những nụ cười, sự tích cực và những điều tốt đẹp mà chị đã vô tình mang đến.
+
+Chúc chị luôn hạnh phúc, bình an và tỏa sáng theo cách riêng của mình. Mong rằng trên hành trình phía trước, chị sẽ luôn gặp được những điều xứng đáng với sự cố gắng và trái tim tuyệt vời của chị. 💗
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: Gửi: Chị Trâm,Chị H.Như,Chị Ngọc,Chị Vanh.
+ngay: 11/11/2026
+
+ky:Em Trường
+---
+Hello 4 chị, mỗi ng đồg hành cùg em qua các đợt tập huân, tuy 4 ngày ko dài nhưng em vẫn lun giữ lấy từng chút kỷ niệm và lưu giữ ko lm cho nó tan biến.
+
+
+
+Em là 1 ng khá nhút nhát và hướng nội, nhưng kia tiếp xúc vs các chj thì em đã bước ra vùng tối mà chính e nghĩ em đã bước dc, mỗi chj cho em 1 cảm giác ko giống nhau nhưng cùng 1 mục tiêu đó là " vẫn tích cực và tâm sự nhìu vào" đó là em nhớ nhất khi dc tiếp xúc và lm vc vs các chj.
+
+
+
+Cảm ơn chj Trâm, người đã đến đầu tiên và kéo em ra khỏi sự ít nói, chj cho em dc cảm giác có 1 ng chj, 1 ng bn, 1 ng em có thể tin tưởng nói chuyện và ko cần phải giấu cảm xúc, qtam em rằg em có ăn chưa hoặc làm cho em những điều nhỏ nhặt, là 1 ng chj mà e hằng mong ước, minh đợt sau chj em mình sẽ gặp lại.Cảm ơn chj 2.
+
+
+
+Cảm ơn chj H.Như, người em dc chug team và cho em bt dc rằg em có 1 ng trưởng nhóm tuyệt vời, tự tin và slay, cảm ơn chj vì những ý tưởng hay, vì những bài học, vì những lần cùg nhau đưa nhóm vươn lên từ vị trí 5 lên vị trí 2, tuy chj ít nói nhưng em bt dc chj là 1 ng rấtt tâm huyết vs vc mình lm và sự cố gắng của chj đã nói lên điều đó, cảm ơn chj đã cố gắng cho team AURELIS và cho em dc những kỉ niệm khó quên. Cảm ơn chj vì tất cả.
+
+
+
+Cảm ơn chj Ngọc, lần đầu tiên em bt 1 ng có thể giỏi tiếng Nhật như chị, nó làm em có thêm độg lực để hc tiếp thứ ngôn ngữ này dù có những lúc mún bỏ cuộc vì quá khó, chj có 1 năng lượng tích cực siu siu nhìu, luôn vui vẻ và hài hước, luôn và người kể những chuyện hài hay khấy độg bầu không khí khi quá yên ắng, em mong muốn khi gặp mình chúg ta sẽ có những kỷ niệm đẹp khi lm vc vs nhau nx. Em cảm ơn chj.
+
+
+
+Cuối cùng là chj V.anh, em gặp chj vào lúc em ko bt tâm sự vs ai, chj đã đến và nói chuyện cùg em, lm quen và tâm sự vs em nhìu thứ, 2 chj em đi vòng quanh siu thị nhưng mãi nói chuyện nên ko quan tâm giờ, và đêm cuối đã đc vui chơi, tâm sự vs nhau tht lâu trc khi chia tay, em mong đêm đó trôi qua lâu 1 chút để ta có thể típ những câu chuyện còn dang dở, lời hẹn đi biển ngắm bình mình hay những tâm sự thầm kín mà chj và em tin tưởng để kể nhau nghe. Em cảm chj vì những kỷ niệm chj để lại cho em và em sẽ lưu giữ nó.
+
+Lời nói cuối, em xin cảm ơn các ah/chj, và thầy cô đã nâng đỡ và giúp e phát triển bản thân, đã giúp em quen dc nhìu bn ms và cho em dc là chính em mà ko cần phải cố gắng gượng ép, cảm ơn tất cả mọi ng vì mọi thứ.
+
+
+
+Em mog cho các chj và mn sẽ thành côg trên con đường mình đag đi và cả phía trc, chúc mn sẽ ln tích cực và vui vẻ, mog sự tiêu cực "đi ra kia chơi !!" Và hy vọng đợt sau ta lai gặp nhau và cười tht tươi nhé !
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: 💌Gửi :MỌI NGƯỜI ĐÃ CÓ MẶT TRONG THANH XUÂN CỦA EM ✨💗
+ngay: 11/11/2026
+ky: Một người trong Youth Bond 
+---
+Gửi đến những người đã đồng hành cùng em trong 3đợt tập huấn vừa qua 
+
+
+
+Em muốn gửi lời cảm ơn chân thành đến tất cả mọi người vì đã tạo nên một hành trình thật ý nghĩa đối với em. Sau mỗi đợt tập huấn, em không chỉ học thêm được nhiều kiến thức, kỹ năng mới mà còn nhận ra những thiếu sót của bản thân để cố gắng thay đổi và hoàn thiện hơn từng ngày.
+
+
+
+Từ một người còn nhiều bỡ ngỡ, đôi khi thiếu tự tin, em đã dần biết cách lắng nghe, chia sẻ, làm việc nhóm, giao tiếp và mạnh dạn thể hiện suy nghĩ của mình hơn. Em cũng học được cách nhìn nhận vấn đề từ nhiều góc độ, biết chọn lọc thông tin và có trách nhiệm hơn với những điều mình làm
+
+
+
+Điều em trân trọng nhất không chỉ là những kiến thức đã học được mà còn là những trải nghiệm, những người đã gặp và những kỷ niệm mà em sẽ luôn nhớ. Có lẽ em vẫn còn nhiều điều phải học, nhưng em tin rằng mình đã tiến bộ hơn so với ngày đầu tiên.
+
+
+
+Cảm ơn vì đã cho em cơ hội được trải nghiệm, được thử sức và được trưởng thành. Mong rằng những điều em học được trong 3đợt tập huấn sẽ trở thành hành trang để em tiếp tục cố gắng, lan tỏa những giá trị tích cực và trở thành phiên bản tốt hơn của chính mình.
+
+
+
+Cảm ơn vì đã là một phần trong hành trình trưởng thành của em. Dù sau này mỗi người có đi trên một con đường khác nhau, em vẫn sẽ luôn trân trọng những ngày tháng này.
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: 💌Gửi :Chị VÂN ANH 
+ngay: 11/11/2026
+ky: Một người trong Youth Bond
+---
+Em cảm ơn chị vì 3 ngày tập huấn vừa qua nhaaa 🫶💗
+
+Thật ra những ngày đầu mới gặp chị, em thấy khuôn mặt chị có vẻ hơi khó tính nên em hơi sợ, không biết phải bắt chuyện với chị như thế nào. Nhưng không hiểu sao lúc đó em lại  rất muốn lập nhóm để đc làm việc với chị và mong muốn đó đã đc thực hiện, sau 3 ngày có cơ hội tiếp xúc, trò chuyện và làm việc cùng chị, em mới nhận ra chị rất hòa đồng, vui vẻ và quan tâm đến mọi người, khác hẳn với ấn tượng ban đầu của em luôn á =)))
+
+Tuy chỉ mới gặp nhau có 3 ngày thôi nhưng em đã cảm thấy khá thoải mái khi nói chuyện với chị cũng học được thêm nhiều điều từ đợt tập huấn này, không chỉ về kiến thức, kỹ năng mà còn về cách giao tiếp, làm việc cùng mọi người và tự tin hơn với bản thân mình. Em nghĩ đây sẽ là một trong những trải nghiệm đáng nhớ, giúp em trưởng thành và tiến bộ hơn một chút trên hành trình của mình.
+
+Tuy thời gian không dài nhưng cũng có nhiều khoảnh khắc vui mà sau này chắc em vẫn sẽ nhớ mãi. Chỉ tiếc là 3 ngày trôi qua nhanh quá, em còn chưa có nhiều thời gian để trò chuyện với chị nữa. Có nhiều lúc muốn nói chuyện thêm mà thời gian cứ trôi vèo vèo, chưa kịp thân hơn thì đã hết 3 ngày mất tiêuuu rồiii 🥹.
+
+Em mong là sau đợt này và cả những đợt sau nữa, chị em mình sẽ có thêm nhiều cơ hội làm việc cùng nhau, tiếp xúc và nói chuyện với nhau nhiều hơn. Hy vọng lần sau gặp lại, tụi mình sẽ không còn ngại ngùng gì nữa mà có thể thoải mái nói chuyện với nhau nhiều hơn nha chịii.
+
+Cảm ơn chị vì đã góp thêm một kỷ niệm đẹp trong hành trình trưởng thành của em. Chúc chị luôn vui vẻ, giữ mãi năng lượng tích cực và gặp thật nhiều điều tốt đẹp. Mong là tụi mình sẽ còn gặp nhau thật nhiều lần nữa chứ không chỉ dừng lại ở 3 ngày ngắn ngủi này đâu nhaaa. Hẹn gặp lại chị trong những dịp sắp tới.💗
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude:Gửi đến nhóm BCTech và tất cả mọi người trong buổi tập huấn 💗
+ngay: 11/11/2026
+anh: ../khongnoithitnoi/hinhanh/image (2).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Một người trong Youth Bond
+---
+Đầu tiên, em muốn gửi lời cảm ơn đến anh Văn và anh Hải, vì đã luôn yêu thương và xem em như một đứa em gái. Đặc biệt, em cảm ơn anh Văn vì đã trao cho em cơ hội được thực hiện những điều mà trước đây em từng nghĩ đến nhưng chưa đủ can đảm để bắt đầu. Cảm ơn anh vì đã tin tưởng, tạo điều kiện và giúp em có cơ hội vượt qua những giới hạn của chính mình.
+
+Tiếp theo là chị Diễm, người luôn ủng hộ, quan tâm và dành cho em những lời khuyên chân thành. Cảm ơn chị vì chưa bao giờ ngại chỉ bảo, nhắc nhở hay dạy dỗ em những lúc cần thiết. Em thật sự biết ơn sự quan tâm ấy, bởi em hiểu rằng không phải ai cũng sẵn lòng dành thời gian và tình cảm để giúp một người khác trưởng thành hơn. Chị vừa tốt bụng, vừa xinh đẹp, lại luôn khiến em cảm nhận được sự ấm áp của một người chị thật sự. 
+
+Cảm ơn Dương, Hương và Chi vì đã đồng hành cùng em trong khoảng thời gian vừa qua. Cảm ơn mọi người vì những lần cùng nhau làm việc, sẻ chia và tạo nên những kỷ niệm mà em sẽ luôn trân trọng. Có lẽ điều đáng quý nhất không chỉ là những gì chúng ta đã cùng làm, mà còn là những tình cảm và sự gắn kết được hình thành trong suốt hành trình ấy.
+
+Cảm ơn anh Trung Anh, dù mới có cơ hội gặp gỡ và tiếp xúc, nhưng anh đã để lại trong em một ấn tượng rất đẹp bởi cách nói chuyện nhẹ nhàng và sự gần gũi của mình. 
+
+Và chị Vy bên trường GTVT nữa, một người vừa xinh đẹp, vừa đáng yêu, lại để lại cho em những ấn tượng rất dễ thương. Mong rằng sau này chúng ta sẽ còn có thêm nhiều cơ hội gặp gỡ, trò chuyện và hiểu nhau hơn nha chị.
+
+Cuối cùng, em muốn cảm ơn tất cả mọi người vì đã luôn tôn trọng những ý kiến và suy nghĩ của em. Cảm ơn vì mỗi lần em đưa ra quan điểm, mọi người đều sẵn lòng lắng nghe, trao đổi và không khiến em cảm thấy mình bị phủ nhận. Em thật sự trân trọng một môi trường mà mỗi người đều có tiếng nói riêng, được tôn trọng và được tự do thể hiện bản thân. Đối với em, đây không chỉ là sự tôn trọng trong công việc mà còn là một điều rất đẹp trong cách mọi người đối xử với nhau.
+Em không biết phải nói bao nhiêu lời cảm ơn mới đủ, nhưng em thật sự rất vui và biết ơn vì đã có cơ hội gặp gỡ, đồng hành và trở thành một phần của tập thể này. Mong rằng sau này, dù mỗi người có những hành trình riêng, chúng ta vẫn sẽ giữ lại những tình cảm đẹp đẽ dành cho nhau.
+
+**YÊU MỌI NGƯỜI NHIỀU LẮM!** 💗😘
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: Gửi đến nhóm SỐNG GIỜ MỸ
+ngay: 11/11/2026
+anh:  ../khongnoithitnoi/hinhanh/image (3).png
+chuthich: Một trong số hình ảnh Youth Bond 
+ky: Một người trong Youth Bond
+---
+Em cảm ơn mọi người vì đã đồng hành cùng em trong car ba đợt tập huấn , em không nghĩ mình sẽ mở lòng và có thể cùng chơi và trò chuyện với mọi người.
+
+Mọi người cũng giúp em hiểu và nhận ra được rất nhiều điều mới cũng như giúp đỡ em để em có thể mạnh dạn hơn.
+
+Mong được gặp mặt mọi người vào nhiều dịp khác nhau.
+
+Cũng gửi đến thành viên mới của nhóm là TA , nào có dịp chúng ta cùng chụp ảnh nhóm nhé! Hãy sớm hoà nhập với nhóm nè 🩷
+
+Em nhớ mọi người rất nhiều!
+
+Và lời cuối cùng là mọi người không sống giờ Mỹ nữa hả. Sao mọi người ngủ sớm quá dị ! 🥰
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude:Gửi: Quỳnh Trâm ❤️
+ngay: 11/11/2026
+
+ky: Một người trong Youth Bond
+---
+Hi Trâm, mình không nghĩ lại gặp được một người lại giống mình đến thế. Mình ấn tượng Trâm bởi tính cách hoạt náo mạnh mẽ. Có lẽ đợt 1, chúng ta không có cơ hội nch nhiều nhưng đâu đó mình nhận lại được những lời khen từ bạn. Mình là một ng khá ít nói nên đôi lúc khuôn mặt này sẽ hơi cau có. Nhưng may mắn sao đợt 2, chúng ta có cơ hội làm việc chung. Thế là mình tìm được đúng ng roi hhh, mình bắt đầu nói nhiều hơn, cuời nhiều hơn. Hai đứa còn giỡn quá tr luon. Cảm ơn Trâm vì đã chấp nhận lắng nghe tui chia sẻ mỗi khi có chuyện không vui, cảm ơn vì đã cho tui biết "Kệ". Tui nhớ Trâm lắm. Cảm ơn Trâm❤️
+
+
+
+</script>
+<script type="text/plain" class="la-thu">
+loai: ban-be
+tieude: Gửi đến tất cả mọi người
+ngay: 11/11/2026
+ky: HN
+
+---
+Cảm ơn mọi người đã là phần kí ức đẹp nhất của mình, mình rất vui khi được đi đợt tập huấn lần này, được gặp gỡ những người xa lạ , được trò chuyện được lắng nghe những bài học có thể mình chưa biết. Tuy là thời gian cạnh nhau không nhiều nhưng nó mang lại nhiều niềm vui, hạnh phúc. Hơi bí văn nhưng mà rất là cảm ơn mọi người đã là phần kí ức đẹp của nhau. Hi vọng sẽ gặp lại nhau!! Chúc mọi người thành công hơn trong công việc. Mãiii nhớ!
+</script>
+
+<script type="text/plain" class="la-thu">
+loai: chinh-minh
+tieude:Gửi: Tôi 🏠
+ngay: 11/11/2026
+ky: Một người đến từ Youth Bond
+---
+Chào cậu, một người không hẳn là hướng nội nhưng lại ít nói ở một môi trường mới. Mình nhớ lần đầu tiên mình bước lên chiếc xe tập huấn ấy, nếu không có người dẫn dắt thì liệu mình có được nói được chia sẻ nhiều như hôm nay không. Những ngày đầu ở buổi tập huấn, mình đã cố gắng nói thật nhiều, cười thật nhiều đã tạo không khí vui vẻ. Khi một năng lượng tích cực toát ra thì sẽ thu hút các năng lực tích cực khác. Mình được học rất nhiều thứ, mình học được cách vận dụng vào thực tế. Cách học, cách quản lý, cách kết nối, cách nch như thế nào. Ở đó mình gặp được những người bạn, mỗi ng mỗi tính cách nhưng đâu đó chúng ta lại có một số điểm chung. Mình yêu những con người ở đó. Xin lỗi bản thân vì đã không giữ sức khỏe tốt, đã bỏ lỡ những hoạt động hay mà mình muốn làm. Nhưng lúc ấy mình cảm nhận được sự quan tâm yêu thương của mọi người dành cho mình như thế nào. Mình nhận ra rằng bản thân phải biết yêu thương và quan tâm người bên cạnh mình nhiều hơn nữa.
+
+Cảm ơn rất nhiều ❤️
+</script>
+<script type="text/plain" class="la-thu">
+loai: chinh-minh
+tieude:Gửi: 💌Gửi :MỌI NGƯỜI ĐÃ CÓ MẶT TRONG THANH XUÂN CỦA EM
+ngay: 11/11/2026
+ky: Một người đến từ Youth Bond
+---
+Gửi đến những người đã đồng hành cùng em trong 3đợt tập huấn vừa qua 
+
+
+
+Em muốn gửi lời cảm ơn chân thành đến tất cả mọi người vì đã tạo nên một hành trình thật ý nghĩa đối với em. Sau mỗi đợt tập huấn, em không chỉ học thêm được nhiều kiến thức, kỹ năng mới mà còn nhận ra những thiếu sót của bản thân để cố gắng thay đổi và hoàn thiện hơn từng ngày.
+
+
+
+Từ một người còn nhiều bỡ ngỡ, đôi khi thiếu tự tin, em đã dần biết cách lắng nghe, chia sẻ, làm việc nhóm, giao tiếp và mạnh dạn thể hiện suy nghĩ của mình hơn. Em cũng học được cách nhìn nhận vấn đề từ nhiều góc độ, biết chọn lọc thông tin và có trách nhiệm hơn với những điều mình làm
+
+
+
+Điều em trân trọng nhất không chỉ là những kiến thức đã học được mà còn là những trải nghiệm, những người đã gặp và những kỷ niệm mà em sẽ luôn nhớ. Có lẽ em vẫn còn nhiều điều phải học, nhưng em tin rằng mình đã tiến bộ hơn so với ngày đầu tiên.
+
+
+
+Cảm ơn vì đã cho em cơ hội được trải nghiệm, được thử sức và được trưởng thành. Mong rằng những điều em học được trong 3đợt tập huấn sẽ trở thành hành trang để em tiếp tục cố gắng, lan tỏa những giá trị tích cực và trở thành phiên bản tốt hơn của chính mình.
+
+
+
+Cảm ơn vì đã là một phần trong hành trình trưởng thành của em. Dù sau này mỗi người có đi trên một con đường khác nhau, em vẫn sẽ luôn trân trọng những ngày tháng này.
+</script>
+<script type="text/plain" class="la-thu">
+loai: chinh-minh
+tieude:Gửi: 💌 Gửi: Người đặc biệt đã dẫn lối cho em, và gửi cả gia đình Youth Bond
+ngay: 11/11/2026
+ky: Một người đến từ Youth Bond
+---
+Em mượn chiếc hộp thư ẩn danh này để nói ra những điều bấy lâu nay cứ giữ mãi trong lòng. Lời đầu tiên, em muốn gửi lời cảm ơn và cả một lời xin lỗi chân thành nhất đến Cô — người đã mở cánh cửa đưa em đến với một tập thể tuyệt vời như Youth Bond.
+
+
+
+Nhóm mình đã qua 3 mùa hoạt động, vậy mà em chỉ mới góp mặt được ở chuyến đi thứ 2 (lần 1 chưa kịp tham gia, lần 3 thì em vướng bận việc học). Nhưng điều khiến em day dứt nhất không chỉ là việc vắng mặt, mà là bởi bản thân em vốn rất nhút nhát và hướng nội. Bước vào một môi trường tràn ngập sự nhiệt huyết, văn minh, lịch sự và gắn kết như YoBond, nhiều lúc em cảm thấy mình quá nhỏ bé, còn nhiều vụng về và chưa đủ tốt để trở thành một mảnh ghép trọn vẹn trong đại gia đình. Em sợ sự rụt rè của mình đã không đạt được sự kỳ vọng mà Cô dành cho em khi trao cho em cơ hội này.
+
+
+
+Dù chỉ một lần đồng hành, nhưng từng khoảnh khắc và tình cảm ấm áp của mọi người ở chuyến đi thứ 2 đã được em trân quý cất giữ sâu trong tim. Em sẽ cố gắng từng chút một để mở lòng hơn. Chúc Cô luôn mạnh khỏe, và chúc ngôi nhà Youth Bond ngày càng phát triển, vươn xa và rực rỡ hơn nữa! 🤍✨
+</script>
+
+<!-- ===== HẾT KHO NỘI DUNG ===== -->
+
+<script src="scipts/Main.js"></script>
+</body>
+</html>

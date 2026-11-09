@@ -1,0 +1,361 @@
+  :root{
+    /* ===== BẢNG MÀU XANH DƯƠNG: đổi ở đây là đổi cả trang ===== */
+    --nen:#cfe5fb;
+    --muc:#10294a;       /* chữ */
+    --phu:#4a6485;       /* chữ phụ */
+    --nhan:#2a78d4;      /* xanh nhấn (nút, tem) */
+    --nhan-dam:#1b5fb0;
+    --giay:#f2f8ff;      /* giấy thư */
+    --vung-an-toan-tren:env(safe-area-inset-top,0px);
+    --vung-an-toan-duoi:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;color:var(--muc);overscroll-behavior:none;
+    font-family:"Be Vietnam Pro",system-ui,sans-serif;background:var(--nen)}
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
+  :focus-visible{outline:3px solid var(--nhan);outline-offset:3px}
+
+  /* ============ SÂN KHẤU ============ */
+  .san{
+    position:fixed;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+    padding:var(--vung-an-toan-tren) 0 var(--vung-an-toan-duoi);
+    background:
+      radial-gradient(circle at 15% 20%,rgba(255,255,255,.75),transparent 40%),
+      radial-gradient(circle at 85% 80%,rgba(120,180,240,.55),transparent 45%),
+      linear-gradient(160deg,#e3f2ff,#bcdaf7 55%,#9fc9f1);
+    --W:min(88vw,640px,calc((100vh - 300px)/.6667));
+  }
+  @supports (height:100dvh){ .san{--W:min(88vw,640px,calc((100dvh - 300px)/.6667))} }
+
+  /* ============ HOA VÀ TIM RƠI (nền) ============ */
+  .hat-lop{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .hat{position:absolute;top:0;left:0;background-size:contain;background-repeat:no-repeat;
+    will-change:transform;animation:roi linear infinite}
+  @keyframes roi{
+    from{transform:translate3d(0,-14vh,0) rotate(0deg)}
+    to{transform:translate3d(var(--dx),114vh,0) rotate(var(--rot))}
+  }
+  .san.an-hat .hat{animation-play-state:paused}
+
+  /* ============ BƯU THIẾP 4x6 INCH ============ */
+  .nho{position:relative;z-index:2;transition:opacity .6s}
+  .san:not(.o-banner):not(.o-thap) .nho{animation:troi 4.5s ease-in-out infinite}
+  @keyframes troi{50%{transform:translateY(-8px)}}
+  .nghieng{transition:transform .25s ease-out}
+
+  .the{
+    position:relative;cursor:pointer;overflow:hidden;
+    width:var(--W);height:calc(var(--W)*.6667);        /* 6 x 4 inch */
+    background:#fff;padding:3.2%;border-radius:6px;
+    box-shadow:0 20px 44px rgba(16,41,74,.3),0 2px 0 rgba(0,0,0,.05);
+    transform:rotate(-3deg);
+    transition:transform .9s cubic-bezier(.77,0,.18,1);
+  }
+  /* vệt sáng quét qua bưu thiếp */
+  .the::before{content:"";position:absolute;z-index:5;top:0;bottom:0;left:0;width:40%;pointer-events:none;
+    background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:translateX(-160%) skewX(-18deg);animation:quet 5s ease-in-out infinite 1.2s}
+  @keyframes quet{0%,55%{transform:translateX(-160%) skewX(-18deg)}85%,100%{transform:translateX(380%) skewX(-18deg)}}
+  .san.o-banner .nho .the::before,.san.o-thap .nho .the::before{animation:none;opacity:0}
+
+  .anh{position:relative;width:100%;height:100%;border-radius:2px;background-size:cover;background-position:center;
+    display:flex;align-items:flex-end}
+  .anh::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(10,30,60,.62),rgba(10,30,60,0) 50%)}
+  .loi{position:relative;z-index:1;padding:4% 5%;color:#fff;
+    font-family:"Dancing Script",cursive;font-weight:700;
+    font-size:calc(var(--W)*.075);line-height:1.1;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .loi small{display:block;font:500 max(11px,calc(var(--W)*.024))/1.4 "Be Vietnam Pro",sans-serif;margin-top:4px;opacity:.94}
+  .tem{position:absolute;z-index:3;right:calc(var(--W)*.05);top:calc(var(--W)*.05);
+    width:calc(var(--W)*.11);aspect-ratio:3/4;background:var(--nhan);color:#fff;padding:4px;
+    display:grid;place-items:center;text-align:center;transform:rotate(4deg);pointer-events:none;
+    font:700 max(7px,calc(var(--W)*.016))/1.2 Lora,serif;
+    outline:3px dotted rgba(255,255,255,.95);outline-offset:-3px}
+  .tem span{border:1.3px solid rgba(255,255,255,.7);width:100%;height:100%;display:grid;place-items:center}
+  .chu-duoi{text-align:center;padding:0 20px;display:flex;flex-direction:column;align-items:center;gap:12px;
+    position:relative;z-index:2;transition:opacity .4s}
+  .chu-duoi h1{font-family:Lora,serif;font-size:clamp(1.35rem,3.4vw,2.2rem);line-height:1.2}
+  .nut-mo{display:inline-flex;align-items:center;gap:10px;padding:13px 26px;border-radius:999px;
+    background:var(--nhan);color:#fff;font-weight:600;box-shadow:0 8px 20px rgba(42,120,212,.4)}
+  .nut-mo svg{animation:xuong 1.4s ease-in-out infinite}
+  @keyframes xuong{50%{transform:translateY(6px)}}
+
+  /* Khung viền kiểu thư gửi đường hàng không (sọc xanh trắng) cho bưu thiếp bìa */
+  .the.bia-the{padding:calc(var(--W)*.03);
+    background:repeating-linear-gradient(135deg,#2a78d4 0 16px,#fff 16px 32px,#7cc0f5 32px 48px,#fff 48px 64px)}
+  .bia-the .loi{max-width:72%}
+  .loi small:empty,.dau-bc:empty,.ky-ngoai:empty{display:none}
+  /* Chữ ký viết tay NẰM NGOÀI bưu thiếp (bên dưới): hiện dần từ trái sang phải như đang ký */
+  .ky-ngoai{position:relative;z-index:3;width:max-content;max-width:94vw;white-space:nowrap;
+    margin-top:calc(var(--W)*.06);
+    font:400 clamp(1.25rem,3.6vw,1.9rem)/1.55 "Playwrite VN","Dancing Script","Pacifico","Be Vietnam Pro",cursive;
+    font-synthesis:none;font-variant-ligatures:none;color:#fff;
+    padding:.1em 1.3em .22em 2.5em;border-radius:999px;
+    background:linear-gradient(100deg,#14407a,#2a78d4);
+    box-shadow:0 8px 20px rgba(16,41,74,.3),inset 0 0 0 2px rgba(255,255,255,.35);
+    text-shadow:0 1px 2px rgba(10,30,60,.4);
+    transform:rotate(-3deg);pointer-events:none;
+    animation:kyviet 2.4s cubic-bezier(.45,0,.3,1) .6s both;transition:opacity .4s}
+  /* máy bay giấy trắng ở đầu dải ký */
+  .ky-ngoai::before{content:"";position:absolute;left:.75em;top:50%;width:1.05em;height:1.05em;transform:translateY(-52%);
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M4 28L58 6L42 58L30 38Z'/%3E%3Cpath d='M30 38L58 6'/%3E%3C/svg%3E") center/contain no-repeat}
+  .ky-ngoai .m0,.ky-ngoai .m1,.ky-ngoai .m2,.ky-ngoai .m3,.ky-ngoai .m4,.ky-ngoai .m5{color:#fff}
+  @keyframes kyviet{from{clip-path:inset(-30% 100% -50% -5%)}to{clip-path:inset(-30% -5% -50% -5%)}}
+  .san.o-banner .ky-ngoai,.san.o-thap .ky-ngoai{opacity:0}
+
+  /* ===== HOA TRANG TRÍ (hoa hồng, tulip, hoa sứ): nụ khép lại, bấm vào thì nở ra ===== */
+  .hoa{display:block;width:100%;height:auto;overflow:visible}
+  .hoa .p{transform-box:view-box;transform:var(--t0);transition:transform 1.15s cubic-bezier(.2,1.3,.3,1) var(--d,0s)}
+  .nohoa .hoa .p{transform:var(--t1)}
+  .hoa-bia{position:absolute;inset:0;z-index:5;pointer-events:none}
+  .hoa-bia .o{position:absolute;transform:rotate(var(--r,0deg));animation:lac2 5.5s ease-in-out infinite var(--dl,0s)}
+  @keyframes lac2{50%{transform:rotate(calc(var(--r,0deg) + 3deg))}}
+  .nhe-may .hoa-bia .o{animation:none}
+  /* hoa cạnh ảnh trong thư và dãy hoa cuối thư */
+  .hoa-goc{position:absolute;z-index:4;left:-26px;bottom:-34px;width:118px;transform:rotate(-8deg);pointer-events:none}
+  .hoa-cuoi{display:flex;justify-content:center;align-items:flex-end;gap:12px;margin:20px 0 4px}
+  .hoa-cuoi .o{width:88px}.hoa-cuoi .o.t{width:68px}
+  /* Dấu bưu điện tròn đóng ở góc dưới bên phải ảnh */
+  .dau-bc{position:absolute;z-index:2;right:5%;bottom:7%;width:calc(var(--W)*.18);aspect-ratio:1;border-radius:50%;
+    border:2px solid rgba(255,255,255,.9);display:grid;place-items:center;text-align:center;color:#fff;
+    font:700 max(8px,calc(var(--W)*.017))/1.35 "Be Vietnam Pro",sans-serif;letter-spacing:.04em;
+    transform:rotate(-14deg);text-shadow:0 1px 3px rgba(0,0,0,.45);pointer-events:none;opacity:.92}
+  .dau-bc::before{content:"";position:absolute;inset:7%;border-radius:50%;border:1.5px dashed rgba(255,255,255,.75)}
+
+  /* Khi đang đọc thư hoặc máy yếu: dừng bớt hoạt ảnh nền cho nhẹ */
+  .san.dang-doc .hat,.san.dang-doc .nho,.san.dang-doc .the::before,.san.dang-doc .hashtag span,.san.dang-doc .tag-troi span{animation-play-state:paused}
+  .nhe-may .the::before{display:none}
+
+  /* Hashtag dán như nhãn trên ảnh bưu thiếp */
+  .hashtag{position:absolute;z-index:2;left:4%;top:5%;max-width:60%;display:flex;flex-wrap:wrap;
+    gap:calc(var(--W)*.014);pointer-events:none}
+  .hashtag span{font:600 max(10px,calc(var(--W)*.026))/1 "Be Vietnam Pro",sans-serif;padding:.4em .8em;
+    border-radius:999px;background:rgba(255,255,255,.9);color:var(--nhan-dam);
+    box-shadow:0 2px 6px rgba(10,30,60,.28);transform:rotate(var(--g,0deg));
+    animation:dan 3.4s ease-in-out infinite var(--dl,0s)}
+  .hashtag span:nth-child(2n){background:var(--nhan);color:#fff}
+  @keyframes dan{50%{transform:rotate(var(--g,0deg)) translateY(-3px)}}
+
+  /* Hashtag lơ lửng quanh bưu thiếp */
+  .tag-troi{position:absolute;inset:0;z-index:1;pointer-events:none;transition:opacity .5s}
+  .tag-troi span{position:absolute;white-space:nowrap;font:600 max(12px,1.05vw)/1 "Be Vietnam Pro",sans-serif;
+    padding:.5em 1em;border-radius:999px;color:var(--nhan-dam);background:rgba(255,255,255,.72);
+    box-shadow:0 4px 12px rgba(16,41,74,.16);transform:rotate(var(--g,0deg));
+    animation:troi2 6s ease-in-out infinite var(--dl,0s)}
+  @keyframes troi2{50%{transform:rotate(var(--g,0deg)) translateY(-10px)}}
+  .san.o-banner .tag-troi,.san.o-thap .tag-troi{opacity:0}
+
+  /* ============ THÁP THƯ ============ */
+  .thap-khung{
+    position:absolute;z-index:1;right:3vw;top:var(--vung-an-toan-tren);bottom:var(--vung-an-toan-duoi);width:min(470px,44vw);
+    display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .4s,visibility 0s .4s;
+  }
+  .thap-dau{padding:22px 28px 6px}
+  .thap-dau h2{font-family:"Dancing Script",cursive;font-size:2rem;line-height:1.1;color:var(--nhan-dam)}
+  .thap-dau p{color:var(--phu);font-size:.9rem;margin-top:2px}
+  .thap{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:14px 30px 70px;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .thap::-webkit-scrollbar{width:6px}
+  .thap::-webkit-scrollbar-thumb{background:rgba(16,41,74,.3);border-radius:6px}
+
+  .la{
+    --r:0deg;--x:0px;
+    position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+    width:100%;height:128px;margin-top:-64px;
+    padding:13px 78px 0 20px;text-align:left;border-radius:6px;background:var(--p,#f2f8ff);
+    box-shadow:0 -3px 12px rgba(16,41,74,.16),0 1px 0 rgba(0,0,0,.06);
+    transform:rotate(var(--r)) translateX(var(--x));
+    transition:transform .3s cubic-bezier(.3,1.4,.5,1),box-shadow .3s;
+  }
+  .la:first-child{margin-top:0}
+  /* Thư không có ảnh: bỏ ô ảnh nhỏ góc phải, chữ được rộng hơn */
+  .la.khong-anh{padding-right:20px}
+  .la.khong-anh::after{display:none}
+  .la b{display:block;max-width:100%;font-family:Lora,serif;font-weight:700;font-size:1rem;line-height:1.3;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .la small{display:block;color:var(--phu);font-size:.8rem;margin-top:3px}
+  .la::after{content:"";position:absolute;right:16px;top:12px;width:40px;height:52px;background:var(--tm,var(--c,#2a78d4));
+    outline:2px dashed rgba(255,255,255,.8);outline-offset:-5px;border-radius:2px}
+  .la:focus-visible{z-index:50!important;transform:rotate(0) translateY(-10px) scale(1.04);box-shadow:0 16px 30px rgba(16,41,74,.32)}
+  @media (hover:hover){
+    .la:hover{z-index:50!important;transform:rotate(0) translateX(0) translateY(-10px) scale(1.04);
+      box-shadow:0 16px 30px rgba(16,41,74,.32)}
+  }
+  .la:active{transform:rotate(0) scale(.98)}
+
+  @keyframes no{
+    from{opacity:0;transform:translate(var(--fx),var(--fy)) rotate(var(--fr)) scale(.2)}
+    60%{opacity:1}
+    to{opacity:1;transform:rotate(var(--r)) translateX(var(--x))}
+  }
+
+  /* ---- Khi đã bấm vào bưu thiếp ---- */
+  /* ---- Bấm vào bưu thiếp bìa: bìa bay đi, banner chủ đề hiện ra ---- */
+  .san.o-banner .chu-duoi,.san.o-thap .chu-duoi{opacity:0;pointer-events:none}
+  .san.o-banner .nho,.san.o-thap .nho{opacity:0;pointer-events:none}
+  .san.o-banner .nho .the,.san.o-thap .nho .the{transform:translateY(-30vh) rotate(-8deg) scale(.4)}
+  /* ---- Chọn một chủ đề: tháp thư của chủ đề đó nổ ra ---- */
+  .san.o-thap .thap-khung{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .4s .25s,visibility 0s}
+
+  /* ============ ĐỌC THƯ ============ */
+  .doc-hop{position:fixed;inset:0;z-index:20;display:none;place-items:center;
+    background:rgba(10,30,60,.74);padding:16px}
+  .doc-hop.mo{display:grid}
+  .doc-giay{position:relative;width:min(740px,100%);max-height:92vh;overflow:auto;background:var(--giay);
+    border-radius:12px;padding:clamp(22px,5vw,56px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    animation:mothu .6s cubic-bezier(.2,1,.3,1)}
+  @supports (height:100dvh){ .doc-giay{max-height:94dvh} }
+  @keyframes mothu{from{opacity:0;transform:translate(var(--dx,0),var(--dy,0)) rotate(-6deg) scale(.15)}}
+  .doc-giay h3{font-family:Lora,serif;font-size:clamp(1.4rem,4.5vw,1.8rem);line-height:1.25;margin-bottom:6px;padding-right:48px}
+  .doc-giay .sub{color:var(--nhan);font-size:.88rem;margin-bottom:20px}
+  /* Ảnh kèm thư: ảnh in dán băng keo, rơi xuống rồi zoom chậm */
+  .anh-thu{position:relative;margin:6px auto 26px;width:min(100%,520px);background:#fff;padding:10px 10px 0;
+    border-radius:3px;box-shadow:0 10px 26px rgba(16,41,74,.28);transform:rotate(var(--g,-1.6deg));
+    animation:tha 1s cubic-bezier(.2,1.2,.3,1) backwards}
+  @keyframes tha{from{opacity:0;transform:translateY(-90px) rotate(calc(var(--g,-1.6deg)*-4)) scale(.85)}}
+  .anh-thu::before,.anh-thu::after{content:"";position:absolute;top:-10px;width:72px;height:22px;
+    background:rgba(150,200,245,.7);box-shadow:0 1px 3px rgba(0,0,0,.15);z-index:3}
+  .anh-thu::before{left:-20px;transform:rotate(-35deg)}
+  .anh-thu::after{right:-20px;transform:rotate(35deg)}
+  #docAnh:empty,.anh-thu:empty{display:none}
+  .khung-anh{position:relative;overflow:hidden;aspect-ratio:3/2;background:#cfe5fb}
+  .zoom{position:absolute;inset:0;background-size:cover;background-position:center;
+    animation:kb 16s ease-in-out infinite alternate}
+  @keyframes kb{to{transform:scale(1.1) translate(-1.5%,-1%)}}
+  .anh-thu figcaption{font:700 1.35rem/1.2 "Dancing Script",cursive;color:var(--nhan-dam);
+    padding:10px 4px 12px;text-align:center}
+
+  /* ===== Thư KHÔNG có ảnh: khối trang trí kiểu bưu điện (sọc hàng không + tem + dấu bưu điện), toàn tông xanh ===== */
+  .cd{--cd:#14407a;--cd2:#cfe6fb;margin:0 auto 26px;width:min(100%,520px);animation:tha .8s cubic-bezier(.2,1.2,.3,1) backwards}
+  .cd-bar{height:9px;border-radius:5px;
+    background:repeating-linear-gradient(135deg,#2a78d4 0 10px,#fff 10px 20px,#7cc0f5 20px 30px,#fff 30px 40px)}
+  .cd-hang{display:flex;align-items:center;justify-content:center;gap:clamp(18px,6vw,34px);padding:20px 0 4px}
+  .cd-tem{flex:none;width:clamp(74px,20vw,92px);aspect-ratio:4/5;padding:10px;background:#fff;
+    outline:2px dashed rgba(42,120,212,.4);outline-offset:-5px;box-shadow:0 6px 16px rgba(16,41,74,.2);transform:rotate(-4deg)}
+  .cd-tem svg{display:block;width:100%;height:100%;overflow:visible;border-radius:2px;background:#eaf4fe;padding:4px}
+  .cd-dau{flex:none;position:relative;box-sizing:border-box;overflow:hidden;width:clamp(96px,28vw,112px);aspect-ratio:1;
+    border:2px solid #2a78d4;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    padding:0 9%;text-align:center;color:#1b5fb0;font:700 clamp(.48rem,1.7vw,.56rem)/1.3 "Be Vietnam Pro",sans-serif;
+    letter-spacing:.03em;transform:rotate(-12deg);opacity:.85}
+  .cd-dau::before{content:"";position:absolute;inset:5px;border-radius:50%;border:1.5px dashed rgba(42,120,212,.6)}
+  .cd-dau b{position:relative;font-weight:700;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+  .cd-dau small{position:relative;font-size:.92em;font-weight:600;opacity:.85}
+  .cd-ct{margin-top:10px;font:700 1.3rem/1.3 "Dancing Script",cursive;color:var(--nhan-dam);text-align:center}
+  /* Máy yếu: dừng chuyển động ảnh */
+  .nhe-may .zoom{animation:none}
+  /* Chữ trong thư: gõ từng chữ khi cuộn tới */
+  .doc-giay p{font-family:Lora,serif;font-size:clamp(1rem,2.8vw,1.07rem);line-height:1.9;margin-bottom:16px;
+    max-width:64ch;white-space:pre-line}
+  .tu{opacity:0;transition:opacity .4s ease}
+  .tu.hien{opacity:1}
+  .cho{opacity:0}
+  .doc-giay p{transition:opacity .5s ease}
+  .dang-go::after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--nhan);
+    vertical-align:-.2em;margin-left:2px;animation:nhay .7s steps(1) infinite}
+  @keyframes nhay{50%{opacity:0}}
+  #docNoidung p:first-child::first-letter{font-family:"Dancing Script",cursive;font-weight:700;font-size:3.3em;
+    float:left;line-height:.82;margin:.06em .1em 0 0;color:var(--nhan)}
+  /* Chữ ký cuối thư: chữ trắng trên dải ruy-băng xanh, kèm biểu tượng theo chủ đề */
+  .ky{--font-ky:"Playwrite VN";--co-ky:1.45rem;display:flex;justify-content:flex-end;margin-top:14px;
+    opacity:0;transform:translateY(10px);transition:opacity .4s,transform .7s cubic-bezier(.2,1.1,.3,1)}
+  .ky.hien{opacity:1;transform:none}
+  .ky-bang{display:inline-flex;align-items:center;gap:.55em;max-width:100%;
+    padding:.12em 1.3em .24em .7em;border-radius:999px;transform:rotate(-2deg);transform-origin:right center;
+    font-family:var(--font-ky),"Playwrite VN","Dancing Script","Pacifico","Be Vietnam Pro",system-ui,sans-serif;
+    font-weight:400;font-size:var(--co-ky);line-height:1.7;color:#fff;
+    white-space:pre-line;overflow-wrap:anywhere;font-synthesis:none;font-variant-ligatures:none;
+    background:linear-gradient(100deg,#14407a,#2a78d4);
+    box-shadow:0 6px 16px rgba(16,41,74,.26),inset 0 0 0 2px rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(10,30,60,.4)}
+  .ky-ic{flex:none;width:1.5em;height:1.5em;overflow:visible;--cd:#fff;--cd2:rgba(255,255,255,.3)}
+  .doc-dong{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;
+    border:1.5px solid var(--muc);display:grid;place-items:center;background:var(--giay)}
+  .doc-dong:hover{background:var(--muc);color:#fff}
+
+  /* ============ BANNER CHỦ ĐỀ ============ */
+  .banner{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+    padding-top:var(--vung-an-toan-tren);padding-bottom:var(--vung-an-toan-duoi);
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s,visibility 0s .45s}
+  .san.o-banner .banner{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .45s .2s,visibility 0s}
+  .banner-dai{position:relative;flex:none;margin:14px auto 0;width:min(92vw,880px);padding:12px 56px 15px;
+    text-align:center;color:#fff;
+    background:linear-gradient(90deg,#1b5fb0,#2a78d4 50%,#1b5fb0);
+    clip-path:polygon(0 0,100% 0,calc(100% - 24px) 50%,100% 100%,0 100%,24px 50%)}
+  .banner-dai h2{font:700 clamp(1.6rem,4.5vw,2.4rem)/1.15 "Dancing Script",cursive}
+  .banner-dai p{font-size:.9rem;opacity:.92;margin-top:2px}
+  .san.o-banner .banner-dai{animation:rua .8s cubic-bezier(.2,1,.3,1) .1s backwards}
+  @keyframes rua{from{opacity:0;transform:translateY(-50px) scaleX(.5)}}
+  .banner-luoi{flex:1;min-height:0;overflow-y:auto;display:flex;padding:26px 20px 90px;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .luoi-trong{display:flex;flex-wrap:wrap;justify-content:center;gap:28px;margin:auto;max-width:1100px}
+
+  /* Mỗi chủ đề là một bưu thiếp 4x6 inch thu nhỏ */
+  .loai-the{--W:clamp(230px,min(31vw,36vh),380px);--r:var(--ng,0deg);--x:0px;flex:0 0 auto;display:block;text-align:left;
+    transform:rotate(var(--ng,0deg));
+    transition:transform .3s cubic-bezier(.3,1.4,.5,1),box-shadow .3s}
+  .loai-the .loi{font-size:max(15px,calc(var(--W)*.085))}
+  @media (hover:hover){ .loai-the:hover{transform:rotate(0) translateY(-10px) scale(1.04);box-shadow:0 24px 44px rgba(16,41,74,.34)} }
+  .loai-the:active{transform:scale(.97)}
+
+  .quay{min-height:42px;padding:.5em 1.2em;border-radius:999px;border:1.5px solid var(--muc);
+    background:rgba(255,255,255,.72);font-size:.9rem;transition:background .2s,color .2s}
+  .quay:hover{background:var(--muc);color:#fff}
+  .banner .quay{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(18px + var(--vung-an-toan-duoi))}
+  .thap-dau .quay{min-height:36px;font-size:.82rem;margin-bottom:8px}
+
+  /* Bưu thiếp của chủ đề đang chọn (nằm bên trái, bấm vào để chọn chủ đề khác) */
+  .nho-loai{position:absolute;left:50%;top:50%;z-index:2;opacity:0;pointer-events:none;
+    transform:translate(-50%,-50%) scale(.5) rotate(-8deg);
+    transition:transform .9s cubic-bezier(.77,0,.18,1),opacity .5s}
+  .san.o-thap .nho-loai{opacity:1;pointer-events:auto;transform:translate(calc(-50% - 22vw),-50%) rotate(-4deg) scale(.78);
+    transition:transform .9s cubic-bezier(.77,0,.18,1) .15s,opacity .5s .15s}
+
+  @media (max-width:640px){
+    .loai-the{--W:min(76vw,320px)}        /* điện thoại: mỗi hàng một bưu thiếp, to và rõ hơn */
+    .luoi-trong{gap:22px}
+    .banner-luoi{padding:20px 16px 90px}
+    .mt{display:none}
+  }
+
+  /* ============ HIỆU ỨNG BẤT NGỜ KHI MỞ THƯ ============ */
+  .hu-lop{position:fixed;inset:0;z-index:30;overflow:hidden;pointer-events:none}
+  .hu-lop i{will-change:transform}
+  .lap{position:absolute;color:#fff;line-height:1;
+    text-shadow:0 0 8px #7cc0f5;
+    animation:lap var(--d,1.6s) ease-in-out var(--dl,0s) 3 both}
+  @keyframes lap{0%{opacity:0;transform:scale(0) rotate(0)}50%{opacity:1;transform:scale(1) rotate(90deg)}100%{opacity:0;transform:scale(0) rotate(180deg)}}
+
+  /* ============ ĐIỆN THOẠI DỌC / MÀN HÌNH HẸP ============ */
+  @media (max-width:860px) and (orientation:portrait){
+    .san.o-thap .nho-loai{transform:translate(-50%,-50%) translateY(-32vh) rotate(-3deg) scale(.5)}
+    .thap-khung{left:0;right:0;top:calc(30vh + var(--vung-an-toan-tren));width:auto}
+    .thap-dau{padding:6px 24px 0}
+    .thap-dau h2{font-size:1.7rem}
+    .thap{padding:10px 22px 70px}
+    .la{height:120px;margin-top:-58px}
+  }
+  @media (max-width:520px){
+    .nut-mo{padding:11px 18px;font-size:.9rem;white-space:nowrap}
+    .san{gap:20px}
+    .doc-hop{padding:0;align-items:end}
+    .doc-giay{width:100%;max-height:94vh;border-radius:16px 16px 0 0}
+  }
+  /* ============ ĐIỆN THOẠI NẰM NGANG (màn hình thấp) ============ */
+  @media (max-height:520px){
+    .san{--W:min(56vw,calc((100vh - 120px)/.6667));gap:6px}
+    .ky-ngoai{font-size:1.2rem;margin-top:calc(var(--W)*.03)}
+    .chu-duoi h1{display:none}
+    .nut-mo{padding:9px 18px;font-size:.9rem}
+    .thap-dau{padding:10px 24px 2px}
+    .thap-dau h2{font-size:1.5rem}
+    .san.o-thap .nho-loai{transform:translate(calc(-50% - 24vw),-50%) rotate(-4deg) scale(.8)}
+    .banner-dai{padding:6px 56px 9px}
+    .banner-dai p{display:none}
+    .banner-luoi{padding-top:14px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+    .hat-lop{display:none}
+  }
